@@ -20,8 +20,13 @@ from django.core.exceptions import ImproperlyConfigured
 # Start logging
 logging.debug('Entered cothranlawoffices.settings.py')
 
+# Set BASEDIR
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+''' Note that tripling up on these dirnames bumps you up another parent folder '''
+
+
 # Load secrets.json (see 2 scoops for more)
-with open("secrets.json") as f:
+with open(os.path.join(BASE_DIR, "secrets.json")) as f:
     secrets = json.loads(f.read())
 
 def get_secret(setting, secrets=secrets):
@@ -35,9 +40,7 @@ def get_secret(setting, secrets=secrets):
         error_msg = "Set the {0} environment variable".format(setting)
         raise ImproperlyConfigured(error_msg)
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-''' Note that doubling up on these dirnames bumps you up another parent folder '''
-logging.debug('BASE_DIR set to: ' + str(BASE_DIR))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -47,7 +50,7 @@ logging.debug('BASE_DIR set to: ' + str(BASE_DIR))
 SECRET_KEY = get_secret("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = []
 
