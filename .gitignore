@@ -2,3 +2,4 @@ static
 .keys
 *.pyc
 *.sqlite3
+secrets.json
