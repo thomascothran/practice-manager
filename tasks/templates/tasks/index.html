@@ -1,0 +1,111 @@
+{% extends "case_manager/employee-portal-base.html" %}
+{% load crispy_forms_tags %}
+
+{% block top_row %}
+<div class="col-sm-6 col-md-7 col-lg-7">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2 class="panel-title">Tasks <a class="btn btn-default btn-md"
+                 href="{% url 'task_manager:add_task' %}">Add</a></h2>
+        </div>
+    <div class="panel-body">
+        {% if task_list %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Task</th>
+                    <th>Assigned to</th>
+                    <th>Supervisor</th>
+                    <th>Context</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                    <th>Created Date</th>
+                    <th>Created By</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for task in task_list %}
+                    <tr>
+                        <td><a href="{% url 'task_manager:view_task' task.id %}">{{ task.name }}</a></td>
+                        <td>{{ task.assigned_to }}</td>
+                        <td>{{ task.supervisor }}</td>
+                        <td>{{ task.context }}</td>
+                        <td>{{ task.priority }}</td>
+                        <td>{{ task.due_date }}</td>
+                        <td>{{ task.created_date }}</td>
+                        <td>{{ task.created_by }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>No tasks to display</p>
+        {% endif %}
+        </div>
+
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h2 class="panel-title">Project <a class="btn btn-default"
+                                               href="{% url 'task_manager:add_project' %}">Add</a></h2>
+        </div>
+
+    <div class="panel-body">
+        {% if project_list %}
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Assigned to</th>
+                    <th>Supervisor</th>
+                    <th>Context</th>
+                    <th>Priority</th>
+                    <th>Due Date</th>
+                    <th>Created Date</th>
+                    <th>Created by</th>
+                </tr>
+                </thead>
+
+                {% for each_project in project_list %}
+                    <tbody>
+                    <tr>
+                        <td><a href="{% url 'task_manager:update-project' each_project.id %}">{{ each_project.name }}</a></td>
+                        <td>{{ each_project.assigned_to }}</td>
+                        <td>{{ each_project.supervisor }}</td>
+                        <td>{{ each_project.context }}</td>
+                        <td>{{ each_project.priority }}</td>
+                        <td>{{ each_project.due_date }}</td>
+                        <td>{{ each_project.created_date }}</td>
+                        <td>{{ each_project.created_by }}</td>
+                    </tr>
+                    </tbody>
+                {% endfor %}
+            </table>
+        {% else %}
+            <p>No Projects to Display</p>
+        {% endif %}
+
+    </div>
+    </div>
+    </div>
+
+<div class="col-sm-3 col-md-3 col-lg-3">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+        <h2 class="panel-title">Filter</h2>
+        </div>
+
+
+        <div class="panel-body">
+            <form action="{% url 'task_manager:index' %}" method="POST">
+                {% csrf_token %}
+                {{ task_filter|crispy }}
+                <input type="submit" value="filter">
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

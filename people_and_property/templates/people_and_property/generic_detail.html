@@ -1,0 +1,13 @@
+{% extends "case_manager/employee-portal-base.html" %}
+
+{% block content %}
+
+<div class="details">
+    {% for key, value in object.items %}
+    <ul>
+        <li>{{ Key }}: {{ Value }}</li>
+    </ul>
+    {% endfor %}
+</div>
+
+{% endblock %}

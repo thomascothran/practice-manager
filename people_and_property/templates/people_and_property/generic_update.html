@@ -1,0 +1,19 @@
+{% extends "case_manager/employee-portal-base.html" %}
+
+{% block top_row %}
+{% load crispy_forms_tags %}
+<h2>Edit {{ name_of_object }}</h2>
+
+<div class="col-sm-6 main">
+    {% autoescape off %}
+    <form action="{{ action_html }}" method="POST">
+    {% endautoescape %}
+    {% csrf_token %}
+    {{ form|crispy }}
+    <BR>
+    <input type="submit" value="Submit Changes"/>
+    </form>
+</div>
+
+
+{% endblock %}

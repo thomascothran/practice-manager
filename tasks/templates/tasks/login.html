@@ -1,0 +1,15 @@
+{% extends "case_manager/employee-portal-base.html" %}
+
+{% block top_row %}
+<div class="col-sm-9">
+    <h2>Please Login</h2>
+    <form action="{% url 'task_manager:login' %}" method="POST">
+        {% csrf_token %}
+        Username<BR>
+        <input type="text" name="username"><BR>
+        Password: <BR>
+        <input type="password" name="password"><BR>
+        <input type="submit" value="submit">
+    </form>
+</div>
+{% endblock %}

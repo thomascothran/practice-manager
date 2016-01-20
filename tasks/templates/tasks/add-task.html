@@ -1,0 +1,20 @@
+{% extends "case_manager/employee-portal-base.html" %}
+
+{% block top_row %}
+
+<div class="col-sm-9 main">
+<h2>Create a task</h2>
+
+    <div name="form">
+    <form action="{% url 'task_manager:add_task' %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_ul }}
+        <input type="hidden" name="created_by" value="{{ user.id }}">
+        <BR><BR>
+        <input type="submit" value="Submit" />
+    </form>
+    </div>
+
+</div>
+
+{% endblock %}

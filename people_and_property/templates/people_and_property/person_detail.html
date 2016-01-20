@@ -1,0 +1,88 @@
+{% extends "case_manager/employee-portal-base.html" %}
+
+{% block top_row %}
+
+<div class="col-sm-6">
+    <h2>
+        {{ person.name_last }}, {{ person.name_first }} {{ person.name_middle }}</h2>
+    <p><a href="{% url 'people_and_property:person-update' person.id %}">Edit Person</a></p>
+    <ul>
+        <li>Gender: {{ person.gender }}</li>
+        <li>Person: {{ person.birthdate }}</li>
+        <li>SSN: {{ person.ssn }}</li>
+        <li>Client: {{ person.client }}</li>
+        <li>Employee: {{ person.employee }}</li>
+        <li>Entry created: {{ person.created_date }}</li>
+        <li>Entry updated: {{ person.updated_date }}</li>
+    </ul>
+
+
+
+
+    <h2>Contact Information</h2>
+
+    <h4>Email</h4>
+    <p><a href="{% url 'people_and_property:email-create' %}">Create New Email</a></p>
+    {% if person.email_set.all %}
+    <ul>
+    {% for each_email in person.email_set.all %}
+        <li>Email address: <a href="{{ each_email.get_absolute_url }}">{{ each_email.address }}</a></li>
+        <li>Type: {{ each_email.type }}</li>
+        <li>Primary: {{ each_email.primary }}</li>
+        <BR>
+    {% endfor %}
+    </ul>
+    {% else %}
+    <p>No email on file</p>
+    {% endif %}
+
+    <h4>Phone</h4>
+    <p><a href="{% url 'people_and_property:phone_create' %}">Add phone</a></p>
+    {% if person.phone_set.all %}
+    <ul>
+        {% for each_phone in person.phone_set.all %}
+        <li>Phone Number: <a href="{{ each_phone.get_absolute_url }}">{{ each_phone.phone_number }}</a></li>
+        <li>Extension: {{ each_phone.extension }}</li>
+        <li>Primary? {{each_phone.primary }}</li>
+        <BR>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No phone number in file</p>
+    {% endif %}
+
+    <h4>Fax</h4>
+    <p><a href="{% url 'people_and_property:fax_create' %}">Add Fax</a></p>
+    {% if person.fax_set.all %}
+    <ul>
+        {% for each_fax in person.fax_set.all %}
+        <li>Fax Number: <a href="{{ each_fax.get_absolute_url }}">{{ each_fax.phone_number }}</a></li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No fax number in file</p>
+    {% endif %}
+
+    <h4>Address</h4>
+    <p><a href="{% url 'people_and_property:address_create' %}">Add Address</a></p>
+    {% if person.address_set.all %}
+    <ul>
+        {% for each_address in person.address_set.all %}
+        <li>Street Address:
+            <a href="{{ each_address.get_absolute_url }}">{{ each_address.street_address }}</a></li>
+        <li>Suite/Apartment Number: {{ each_address.suite_number }}</li>
+        <li>City: {{ each_address.city }}</li>
+        <li>State: {{ each_address.state }}</li>
+        <li>Zip: {{ each_address.zip }}</li>
+        <li>Country: {{ each_address.country }}</li>
+        {% endfor %}
+        <BR>
+    </ul>
+    {% else %}
+    <p>No Address Provided</p>
+    {% endif %}
+
+</div>
+
+
+{% endblock %}

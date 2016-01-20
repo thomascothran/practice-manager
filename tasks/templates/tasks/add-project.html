@@ -1,0 +1,18 @@
+{% extends "case_manager/employee-portal-base.html" %}
+
+{% block top_row %}
+{% load crispy_forms_tags %}
+<div class="col-sm-9 main">
+    <h2>Create a project</h2>
+
+    <div name="form">
+    <form action="{% url 'task_manager:add_project' %}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <BR><BR>
+        <input type="submit" value="Submit" />
+    </form>
+    </div>
+</div>
+
+{% endblock %}

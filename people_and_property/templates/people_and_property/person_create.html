@@ -1,0 +1,18 @@
+{% extends "case_manager/employee-portal-base.html" %}
+
+{% block top_row %}
+{% load crispy_forms_tags %}
+<div class="col-sm-9 main">
+<h2>Edit Person</h2>
+
+    <div class="form">
+        <form action="{% url 'people_and_property:person-create' %}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <BR>
+        <input type="submit" value="Submit Changes"/>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

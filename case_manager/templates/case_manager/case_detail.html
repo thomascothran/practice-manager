@@ -1,0 +1,149 @@
+{% extends "case_manager/employee-portal-base.html" %}
+
+{% block top_row %}
+
+
+    <div class="col-sm-6 main">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">Clients</h3>
+        </div>
+
+        <div class="panel-body">
+            {% for each_client in case.client.all %}
+            <h4><a href="{{ each_client.get_absolute_url }}">
+                {{ each_client.name_last }}, {{ each_client.name_first }}</a></h4>
+            <ul>
+                {% for each_phone in each_client.phone_set.all %}
+                <li>Phone: <a href="{{ each_phone.get_absolute_url }}">{{ each_phone.phone_number }}</a>
+                {% if each_phone.extension %} x. {{each_phone.extension }}{% endif %}
+                </li>
+                {% endfor %}
+
+                {% for each_email in each_client.email_set.all %}
+                <li>Email: <a href="{{ each_email.get_absolute_url }}">{{ each_email }}</a></li>
+                {% endfor %}
+
+                {% for each_fax in each_client.email_set.all %}
+                <li>Fax: <a href="{{ each_fax.get_absolute_url }}">{{ each_fax }}</a></li>
+                {% endfor %}
+
+                {% for each_address in each_client.address_set.all %}
+                <li>Address: <a href="{{ each_address.get_absolute_url }}">{{each_address.street_address }}</a>
+                    {% if each_address.suite_number %}#{{ each_address.suite_number }}; {% endif %}
+                    {{ each_address.city }}, {{ each_address.state }} {{ each_address.zip }}</li>
+                {% endfor %}
+            </ul>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Description of Case</h3>
+        </div>
+        <div class="panel-body">
+            <p>{{ case.description_of_case }}</p>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Basic Case Info</h3>
+        </div>
+        <div class="panel-body">
+            <ul>
+                <li>Case Type: {{ case.type_of_case }}</li>
+                <li>Start Date: {{ case.date_started }}</li>
+                <li>End Date: {{ case.date_ended }}</li>
+                <li>Current Status: {{ case.status }}</li>
+                {% if case.retainer.all %}
+                <li>Retainer Agreement: Link to</li>
+                {% else %}
+                <li>No Retainer Agreement Found</li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Billing Info</h3>
+        </div>
+        <div class="panel-body">
+            <ul>
+                <li>Hourly: {{ case.hourly }}</li>
+                {% if case.attorney_hourly_rate %}
+                <li>Attorney Hourly Rate: {{ case.attorney_hourly_rate }}</li>
+                <li>Assistant Hourly Rate: {{ case.assistant_hourly_rate }}</li>
+                {% endif %}
+                <li>Total Billings: {{ case.total_billed }}</li>
+                <li>Total Received: {{ case.total_billings_received }}</li>
+            </ul>
+        </div>
+
+    </div>
+
+    </div>
+
+<div class="col-sm-3">
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Actions</h3>
+        </div>
+
+        <div class="panel-body">
+            <a class="btn btn-lg btn-default" href="{% url 'case_manager:case_update' case.id %}">Edit Case</a>
+        </div>
+    </div>
+
+
+    <ul class="list-group">
+        <li class="list-group-item">
+            <h4 class="list-group-item-heading">
+                Related Tasks <a class="btn btn-xs btn-default"
+                                 href="{% url 'task_manager:add_task' %}">Add</a>
+            </h4>
+            {% if case.tasks_rel_to_case.all %}
+            {% for each_task in case.tasks_rel_to_case.all %}
+            <p><a href="{{ each_task.get_absolute_url }}">
+                    {{ each_task }} (status: {{ each_task.status }})</a></p>
+            {% endfor %}
+            {% endif %}
+
+        </li>
+
+    <li class="list-group-item">
+        <h4>Related Projects</h4>
+        <p><a href="{% url 'task_manager:add_project' %}">Add Project</a></p>
+        {% if case.projects_rel_to_case.all %}
+        <ul>
+            {% for each_project in case.tasks_rel_to_case.all %}
+            <li><a href="{{ each_project.get_absolute_url }}">
+                {{ each_project }} (Status: {{ each_project.status }})</a></li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    </li>
+
+    <li class="list-group-item">
+        <h4>Related Parties</h4>
+        <ul>
+            {% if case.related_parties.all %}
+            {% for each_party in case.related_parties.all %}
+            <li><a href="{{ each_party.get_absolute_url }}">{{ each_party }}</a></li>
+            {% endfor %}
+            {% else %}
+            <li>No Related Parties Found</li>
+            {% endif %}
+        </ul>
+    </li>
+    </ul>
+        </div>
+    </div>
+
+{% endblock %}

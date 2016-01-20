@@ -1,0 +1,35 @@
+{% extends "case_manager/employee-portal-base.html" %}
+{% load crispy_forms_tags %}
+{% block top_row %}
+
+<div class="col-sm-6 col-md-7 col-lg-7 main">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+        <h2 class="panel-title">Update a project</h2>
+        </div>
+
+    <div class="panel-body">
+    <form action="{% url 'task_manager:update-project' project.id %}" method="POST">
+        {% csrf_token %}
+        {{ form.as_ul }}
+        <BR><BR>
+        <input type="submit" value="Submit" />
+    </form>
+    </div>
+</div>
+
+</div>
+
+<div class="col-sm-3 col-md-3 col-lg-3">
+    <ul class="list-group">
+    {% if related_tasks %}
+    {% for task_obj in related_tasks %}
+        <li class="list-group-item"><a href="{% url 'task_manager:task_detail' task_obj.id %}">
+            {{ task_obj.name }}
+        </a></li>
+    {% endfor %}
+    {% endif %}
+    </ul>
+</div>
+
+{% endblock %}

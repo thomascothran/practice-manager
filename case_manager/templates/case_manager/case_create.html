@@ -1,0 +1,18 @@
+{% extends "case_manager/employee-portal-base.html" %}
+
+{% block top_row %}
+{% load crispy_forms_tags %}
+
+
+<div class="col-sm-8 col-md-9 main">
+    <h2>Create a new case</h2>
+    <form action="{% url 'case_manager:case_create' %}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <BR><BR>
+        <input type="submit" value="Submit" />
+    </form>
+</div>
+
+
+{% endblock %}
