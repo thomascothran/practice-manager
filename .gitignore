@@ -2,4 +2,5 @@ static
 .keys
 *.pyc
 *.sqlite3
+practice.sqlite3
 secrets.json

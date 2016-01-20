@@ -23,6 +23,7 @@ logging.debug('Entered cothranlawoffices.settings.py')
 # Load secrets.json (see 2 scoops for more)
 with open("secrets.json") as f:
     secrets = json.loads(f.read())
+
 def get_secret(setting, secrets=secrets):
     """
     Get the secrete variable or return explicit exception. See
