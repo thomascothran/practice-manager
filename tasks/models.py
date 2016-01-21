@@ -3,12 +3,8 @@ from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-
-
 from case_manager.models import Case
 from people_and_property.models import Person
-
-# from people_and_property.models import person
 
 import uuid
 
@@ -19,6 +15,7 @@ CONTEXTS = (
     ('@home', '@home'),
     ('@town', '@town'),
     ('@philosophy', '@philosophy'),
+    ('@programming', '@programming')
 )
 
 PRIORITIES = (
@@ -40,6 +37,28 @@ STATUSES = (
 
 
 # CLASSES
+
+class Context(models.Model):
+    """
+    The purpose of Context is to allow users to assign their own context to
+    a project or task. Each user, even if they are looking at the "same" task,
+    will see their own context. For example, if the assigned user as @work
+    but the supervisor has @office, each will see their respective context.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=30, default='@work')
+    description = models.TextField(max_length=200, blank=True)
+    user = models.ForeignKey(User, related_name='task_contexts')
+    projects = models.ManyToManyField(Project, related_name='context_for_project')
+    tasks = models.ManyToManyField(Task, related_name='context_for_task')
+
+    def __str__(self):
+        return self.name
+
+    # TO DO: Set an absolute url
+
+
 class Project(models.Model):
     """
     Project is for any multi-step thing that needs to be done. Tasks
@@ -70,8 +89,6 @@ class Project(models.Model):
     """Status will be either 'pending' or 'complete'"""
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
-    context = models.CharField(max_length=50, choices=CONTEXTS)
-    priority = models.CharField(max_length=50, choices=PRIORITIES)
     due_date = models.DateTimeField(blank=True, null=True)
     related_project = models.ForeignKey("self", blank=True, null=True)
     """under_project links to the project over this project, making this
@@ -103,8 +120,6 @@ class Task(models.Model):
     """Status will be either 'pending' or 'complete'"""
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
-    context = models.CharField(max_length=50, choices=CONTEXTS)
-    priority = models.CharField(max_length=50, choices=PRIORITIES)
     due_date = models.DateTimeField(blank=True, null=True)
     related_project = models.ForeignKey(Project, blank=True, null=True)
     notes = models.TextField(blank=True)
