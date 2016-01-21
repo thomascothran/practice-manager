@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^$', views.IndexView, name='index'),
 
     # Login/Logout/Change Password/Etc
+    url(r'^settings/$', views.settings, name='settings'),
 
     # TASKS
     # E.g., /task/3j243o-Ofjdsof-3123
@@ -26,6 +27,6 @@ urlpatterns = [
     url(r'^update-project/(?P<pk>[a-zA-Z0-9_-]+)/$', views.ProjectUpdate.as_view(), name='update-project'),
 
     # TAGS
-    url(r'^context/add/$', views.ContextTagCreate.as_view(), name='context_add')
+    url(r'^context/add/$', views.ContextTagCreate.as_view(), name='context_add'),
 
 ]
