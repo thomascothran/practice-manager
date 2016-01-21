@@ -25,4 +25,7 @@ urlpatterns = [
     # Updating/viewing Projects
     url(r'^update-project/(?P<pk>[a-zA-Z0-9_-]+)/$', views.ProjectUpdate.as_view(), name='update-project'),
 
+    # TAGS
+    url(r'^context/add/$', views.ContextTagCreate.as_view(), name='context_add')
+
 ]
