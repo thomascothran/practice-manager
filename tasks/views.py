@@ -4,9 +4,11 @@ from django.views.generic import ListView, DetailView
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.db.models import Q
 
 from .models import Task, Project
 from .forms import TaskFilter
+
 import logging
 
 # LOGGING SETTINGS
@@ -34,11 +36,21 @@ def IndexView(request):
         # TO DO: Filter task list down to show only tasks created by,
         # assigned to, or supervised by the current user
 
-        task_list = Task.objects.filter(status='pending').order_by('-created_date')
+        task_list = Task.objects.filter(
+            Q(status='pending'),
+            Q(created_by=request.user) | Q(assigned_to=request.user) | Q(supervisor=request.user)
+        )
+        task_list = task_list.order_by('-updated_date')
 
         # TO DO: Filter task list down to show only projects created by,
         # assigned to, or supervised by the current user
-        project_list = Project.objects.order_by('-created_date')
+        project_list = Project.objects.filter(
+            Q(status='pending'),
+            Q(created_by=request.user) | Q(assigned_to=request.user) | Q(supervisor=request.user)
+        )
+        project_list = project_list.order_by('-created_date')
+
+        # Set context to be sent to the template
         context = {'task_list': task_list, 'project_list': project_list, 'task_filter': TaskFilter}
         return render(request, 'tasks/index.html', context)
 
@@ -62,8 +74,15 @@ def IndexView(request):
             # Set initial task and project lists
             logging.debug('Created task list and project list variables. Assigned all'
                           + 'objects to them')
-            task_list = Task.objects.all()
-            project_list = Task.objects.all()
+
+            # Set initial task and project lists, limiting them to what the user is allowed
+            # to see
+            task_list = Task.objects.filter(
+                Q(created_by=request.user) | Q(assigned_to=request.user) | Q(supervisor=request.user)
+            )
+            project_list = Task.objects.filter(
+                Q(created_by=request.user) | Q(assigned_to=request.user) | Q(supervisor=request.user)
+            )
 
             # Apply context, priority, and status filters to projects
             logging.debug('About to apply type filters.')
@@ -94,6 +113,7 @@ def IndexView(request):
                                   'both tasks and projects')
                     task_list = task_list.filter(supervisor=request.user)
                     project_list = project_list.filter(supervisor=request.user)
+
             if type_filter == 'project':
                 logging.debug('type_filter set to project. Setting task_list to none.')
                 task_list = None

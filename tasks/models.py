@@ -2,6 +2,9 @@ from django.db import models
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
 from django.utils import timezone
+
+
+
 from case_manager.models import Case
 from people_and_property.models import Person
 
@@ -83,7 +86,6 @@ class Project(models.Model):
 
 
 
-
 class Task(models.Model):
     """
     A task is a one step item that needs to be done that may or may not be
@@ -116,4 +118,3 @@ class Task(models.Model):
 
     def get_absolute_url(self):
         return reverse('task_manager:task_detail', kwargs={'pk': self.pk})
-
