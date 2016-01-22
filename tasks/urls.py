@@ -8,7 +8,7 @@ urlpatterns = [
     url(r'^$', views.IndexView, name='index'),
 
     # Login/Logout/Change Password/Etc
-    url(r'^settings/$', views.settings, name='settings'),
+    url(r'^settings/$', views.Settings, name='settings'),
 
     # TASKS
     # E.g., /task/3j243o-Ofjdsof-3123
