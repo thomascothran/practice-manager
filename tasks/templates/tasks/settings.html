@@ -1,0 +1,31 @@
+{% extends "case_manger/employee-portal-base.html" %}
+{% load crispy_forms_tags %}
+
+{% block top_row %}
+<div class="col-sm-9 col-md-10 col-lg-10">
+    <h2>Task Manager Settings</h2>
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h2 class="panel-title">
+                Tags Settings
+            </h2>
+        </div>
+
+        <div class="panel-body">
+            <h4>
+                Context Tags
+                <a class="btn btn-default" href="{% url 'task_manager:context_add' %}">Add</a>
+            </h4>
+            {% if user.task_contexts.all %}
+                <ul>
+                {% for each_tag in user.task_contexts.all %}
+                    <li>each_tag</li> {# TO DO: After you set up absolute url, put here #}
+                {% endfor %}
+                </ul>
+            {% else %}
+                <p>No contexts</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
