@@ -10,14 +10,6 @@ import uuid
 
 # CONSTANTS
 
-CONTEXTS = (
-    ('@work', '@work'),
-    ('@home', '@home'),
-    ('@town', '@town'),
-    ('@philosophy', '@philosophy'),
-    ('@programming', '@programming')
-)
-
 PRIORITIES = (
     ('1-Now', '1-Now'),
     ('2-Next', '2-Next'),
