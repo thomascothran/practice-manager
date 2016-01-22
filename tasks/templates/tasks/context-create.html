@@ -1,0 +1,42 @@
+{% extends "case_manager/employee-portal-base.html" %}
+{% load crispy_forms_tags %}
+
+{% block top_row %}
+
+<div class="col-sm-6 col-md-7 col-lg-7 main">
+<h2>Create a context</h2>
+
+    <div name="form">
+    <form action="{% url 'task_manager:context_add' %}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <input type="hidden" name="created_by" value="{{ user.id }}">
+        <BR><BR>
+        <input type="submit" value="Submit" />
+    </form>
+    </div>
+
+</div>
+
+<div class="col-sm-3 col-md-3 col-lg-3">
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            <h3 class="panel-title">Current Contexts</h3>
+        </div>
+
+        <div class="panel-body">
+            {% if user.tasks_contexts.all %}
+            <ul>
+                {% for each_tag in user.task_contexts.all %}
+                <li>{{ each_tag }}</li> {# To do: add in the absolute url for the task #}
+                {% end_for %}
+            </ul>
+            {% else %}
+            <p>No context tags.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
