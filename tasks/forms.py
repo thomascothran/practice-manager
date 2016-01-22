@@ -24,8 +24,6 @@ class TaskFilter(forms.Form):
     """
     This class is used to filter tasks by context and priority
     """
-    context_filter = forms.ChoiceField(label='Context',
-                                       choices=CONTEXTS)
     priority_filter = forms.ChoiceField(label='Priority',
                                         choices=PRIORITIES)
     status_filter = forms.ChoiceField(label='Status',
