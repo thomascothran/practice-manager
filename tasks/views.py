@@ -3,10 +3,10 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import ListView, DetailView
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.db.models import Q
 
-from .models import Task, Project
+from .models import Task, Project, Context
 from .forms import TaskFilter
 
 import logging
@@ -178,7 +178,7 @@ class TaskCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'tasks.can_add_task'
     template_name = 'tasks/add-task.html'
     model = Task
-    fields = ['name', 'context', 'priority', 'related_project', 'due_date',
+    fields = ['name', 'related_project', 'due_date',
               'notes', 'status', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
     def form_valid(self, form):
@@ -193,7 +193,7 @@ class TaskUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = 'tasks.can_add_task'
     template_name = 'tasks/update-task.html'
     model = Task
-    fields = ['status', 'name', 'context', 'priority', 'related_project',
+    fields = ['status', 'name', 'context', 'related_project',
               'due_date', 'notes', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
 
@@ -211,7 +211,7 @@ class ProjectCreate(PermissionRequiredMixin, CreateView):
 
     template_name = 'tasks/add-project.html'
     model = Project
-    fields = ['name', 'purpose', 'vision', 'big_steps', 'context', 'priority',
+    fields = ['name', 'purpose', 'vision', 'big_steps', 'context',
               'due_date', 'related_project', 'status', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
     def form_valid(self, form):
@@ -228,7 +228,7 @@ class ProjectUpdate(PermissionRequiredMixin, UpdateView):
     model = Project
     context_object_name = 'project'
     fields = ['name','status', 'purpose', 'vision', 'big_steps',
-              'context', 'priority', 'due_date', 'related_project', 'created_by',
+              'context', 'due_date', 'related_project', 'created_by',
               'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
 
@@ -242,3 +242,27 @@ class ProjectUpdate(PermissionRequiredMixin, UpdateView):
         context['related_tasks'] = Task.objects.filter(related_project__id=self.object.id)
         return context
 
+
+@permission_required('tasks.can_change_context')
+def Settings(request):
+    """
+    This just returns the settings page for the user of the task manager
+    """
+    return render(request, 'tasks/settings.html')
+
+
+class ContextTagCreate(PermissionRequiredMixin, CreateView):
+    """
+    This allows users with permissions to create tags to create their own
+    tags for contexts
+    """
+    permission_required = 'tasks.can_add_context'
+    template_name = 'tasks/context-create.html'
+    model = Context
+    context_object_name = 'context'
+    fields = ['name', 'description']
+
+    # Add in the user as the creator of the tag object
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(ContextTagCreate, self).form_valid(form)
