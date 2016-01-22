@@ -1,13 +1,15 @@
 from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic import ListView, DetailView
+from django.views.generic import DetailView
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
 from django.db.models import Q
+from django import forms
 
 from .models import Task, Project, Context
 from .forms import TaskFilter
+from .utils import get_users_contexts
 
 import logging
 
@@ -18,7 +20,7 @@ logging.debug('Start of tasks/views.py')
 
 # Create your views here.
 
-# Default Index Page
+
 @permission_required('tasks.can_add_task')
 def IndexView(request):
     """
@@ -28,8 +30,12 @@ def IndexView(request):
     logging.debug('Entered IndexView in tasks/views.py')
     logging.debug('request.method is %s' % str(request.method))
 
+    # Dynamically Generate Task Filter
+    task_filter = TaskFilter
+    task_filter['context_filter'] = forms.ChoiceField(label='Context',
+                                                      choices=get_users_contexts(request.user))
+
     # Filter task list if the form
-    # TO DO: Add TaskForm to context
     if request.method != "POST":
         logging.debug('No post data. Returning all tasks and projects.')
 
@@ -42,7 +48,7 @@ def IndexView(request):
         )
         task_list = task_list.order_by('-updated_date')
 
-        # TO DO: Filter task list down to show only projects created by,
+        # Filter task list down to show only projects created by,
         # assigned to, or supervised by the current user
         project_list = Project.objects.filter(
             Q(status='pending'),
@@ -51,7 +57,7 @@ def IndexView(request):
         project_list = project_list.order_by('-created_date')
 
         # Set context to be sent to the template
-        context = {'task_list': task_list, 'project_list': project_list, 'task_filter': TaskFilter}
+        context = {'task_list': task_list, 'project_list': project_list, 'task_filter': task_filter}
         return render(request, 'tasks/index.html', context)
 
     else:
@@ -157,8 +163,8 @@ def IndexView(request):
             # Create Context
             context = {'task_list': task_list,
                        'project_list' : project_list,
-                       'task_filter': TaskFilter,
-                       'notifications' : notifications}
+                       'task_filter': task_filter,
+                       'notifications': notifications}
             # Return HttpResponse
             return render(request, 'tasks/index.html', context)
         # TO DO: Need to return form with input data if it is not validated
