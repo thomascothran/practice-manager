@@ -38,27 +38,6 @@ STATUSES = (
 
 # CLASSES
 
-class Context(models.Model):
-    """
-    The purpose of Context is to allow users to assign their own context to
-    a project or task. Each user, even if they are looking at the "same" task,
-    will see their own context. For example, if the assigned user as @work
-    but the supervisor has @office, each will see their respective context.
-    """
-
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=30, default='@work')
-    description = models.TextField(max_length=200, blank=True)
-    user = models.ForeignKey(User, related_name='task_contexts')
-    projects = models.ManyToManyField(Project, related_name='context_for_project')
-    tasks = models.ManyToManyField(Task, related_name='context_for_task')
-
-    def __str__(self):
-        return self.name
-
-    # TO DO: Set an absolute url
-
-
 class Project(models.Model):
     """
     Project is for any multi-step thing that needs to be done. Tasks
@@ -101,6 +80,8 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
+    # TO DO: Set an absolute url
+
 
 
 class Task(models.Model):
@@ -133,3 +114,24 @@ class Task(models.Model):
 
     def get_absolute_url(self):
         return reverse('task_manager:task_detail', kwargs={'pk': self.pk})
+
+
+class Context(models.Model):
+    """
+    The purpose of Context is to allow users to assign their own context to
+    a project or task. Each user, even if they are looking at the "same" task,
+    will see their own context. For example, if the assigned user as @work
+    but the supervisor has @office, each will see their respective context.
+    """
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=30, default='@work')
+    description = models.TextField(max_length=200, blank=True)
+    user = models.ForeignKey(User, related_name='task_contexts')
+    projects = models.ManyToManyField(Project, related_name='context_for_project')
+    tasks = models.ManyToManyField(Task, related_name='context_for_task')
+
+    def __str__(self):
+        return self.name
+
+    # TO DO: Set an absolute url
