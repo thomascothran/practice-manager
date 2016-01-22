@@ -31,9 +31,7 @@ def IndexView(request):
     logging.debug('request.method is %s' % str(request.method))
 
     # Dynamically Generate Task Filter
-    task_filter = TaskFilter
-    task_filter['context_filter'] = forms.ChoiceField(label='Context',
-                                                      choices=get_users_contexts(request.user))
+    task_filter = TaskFilter(user=request.user)
 
     # Filter task list if the form
     if request.method != "POST":
@@ -162,7 +160,7 @@ def IndexView(request):
             ''' Notifications put in a list so that multiple notifications can be displayed '''
             # Create Context
             context = {'task_list': task_list,
-                       'project_list' : project_list,
+                       'project_list': project_list,
                        'task_filter': task_filter,
                        'notifications': notifications}
             # Return HttpResponse
