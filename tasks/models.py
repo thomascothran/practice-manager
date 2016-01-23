@@ -126,4 +126,5 @@ class Context(models.Model):
     def __str__(self):
         return self.name
 
-    # TO DO: Set an absolute url
+    def get_absolute_url(self):
+        return reverse('task_manager:context_detail', kwargs={'pk': self.pk})

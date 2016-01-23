@@ -28,5 +28,6 @@ urlpatterns = [
 
     # TAGS
     url(r'^context/add/$', views.ContextTagCreate.as_view(), name='context_add'),
+    url(r'^context/(?P<pk>[a-zA-Z0-9_-]+)/detail', views.ContextTagDetail.as_view(), name='context_detail'),
 
 ]
