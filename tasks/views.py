@@ -3,7 +3,7 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import DetailView
 from django.shortcuts import render
 from django.contrib.auth.decorators import permission_required
-from django.contrib.auth.mixins import PermissionRequiredMixin, LoginRequiredMixin
+from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
 from django import forms
 
@@ -260,6 +260,7 @@ class ContextTagCreate(PermissionRequiredMixin, CreateView):
     This allows users with permissions to create tags to create their own
     tags for contexts
     """
+
     permission_required = 'tasks.can_add_context'
     template_name = 'tasks/context-create.html'
     model = Context
@@ -270,3 +271,25 @@ class ContextTagCreate(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super(ContextTagCreate, self).form_valid(form)
+
+
+class ContextTagDetail(UserPassesTestMixin, DetailView):
+    """
+    This page allows users to view particular tags in detail.
+    """
+    model = Context
+    context_object_name = 'context'
+    template_name = 'tasks/context_detail.html'
+
+
+    def test_func(self):
+        """
+        This test ensure that the active user (in request.user) is the
+        same as the user who owns the tag. self.request.user is the user
+        currently browsing the site, and self.object.user is the
+        context.user
+        """
+        logging.debug('Entered test_func in ContextTagDetail view')
+        logging.debug('self.request.user is %s' % self.request.user)
+        context_object = self.get_object()
+        return self.request.user == context_object.user
