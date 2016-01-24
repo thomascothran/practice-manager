@@ -220,7 +220,7 @@ class CaseDetailView(UserPassesTestMixin, DetailView):
     template = 'case_manager/case_detail.html'
 
     def test_func(self):
-        return self.user.is_staff == True and self.request.user.is_active == True
+        return self.request.user.is_staff == True and self.request.user.is_active == True
 
 
 @user_passes_test(user_is_staff)
