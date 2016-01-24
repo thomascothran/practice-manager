@@ -28,10 +28,10 @@
         </div>
 
         <div class="panel-body">
-            {% if user.tasks_contexts.all %}
+            {% if user.task_contexts.all %}
             <ul>
                 {% for each_tag in user.task_contexts.all %}
-                <li>{{ each_tag }}</li> {# To do: add in the absolute url for the task #}
+                <li><a href="{{ each_tag.get_absolute_url }}">{{ each_tag }}</a></li>
                 {% endfor %}
             </ul>
             {% else %}
