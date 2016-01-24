@@ -1,4 +1,4 @@
-{% extends "case_manger/employee-portal-base.html" %}
+{% extends "case_manager/employee-portal-base.html" %}
 {% load crispy_forms_tags %}
 
 {% block top_row %}
@@ -20,7 +20,7 @@
             {% if user.task_contexts.all %}
                 <ul>
                 {% for each_tag in user.task_contexts.all %}
-                    <li>each_tag</li> {# TO DO: After you set up absolute url, put here #}
+                    <li><a href="{{ each_tag.get_absolute_url }}">{{ each_tag }}</a></li>
                 {% endfor %}
                 </ul>
             {% else %}
@@ -29,3 +29,5 @@
         </div>
     </div>
 </div>
+
+{% endblock %}
