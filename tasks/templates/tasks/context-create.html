@@ -30,7 +30,7 @@
             <ul>
                 {% for each_tag in user.task_contexts.all %}
                 <li>{{ each_tag }}</li> {# To do: add in the absolute url for the task #}
-                {% end_for %}
+                {% endfor %}
             </ul>
             {% else %}
             <p>No context tags.</p>
