@@ -6,6 +6,7 @@ from django.core.urlresolvers import reverse
 
 from ..models import Project, Task, Context
 
+
 class ProjectTestCase(TestCase):
     """
     This tests the Project model using unit testing.
@@ -94,3 +95,92 @@ class ProjectTestCase(TestCase):
                 test_project2,                      # reverse relationship is set up correctly
                 test_project1.subordinate_projects.get(name=test_project2.name)
         )
+
+
+class TaskTestCase(TestCase):
+    """
+    This class tests the tasks models.
+    """
+
+    def testCreateTask(self):
+        """
+        This tests whether a task can be created.
+        """
+
+        # Create a user
+        User.objects.create_user(
+            username='logged_in_super_user',
+            password='loggedinSUS12391',
+            email = 'jimbo@hotmail.com'
+        )
+
+        logged_in_superuser = User.objects.get(username='logged_in_super_user')
+
+        # Create a task
+        Task.objects.create(
+            name='SDKfjwraa09 asd0fai093iasdfj a',
+            created_by=logged_in_superuser,
+            assigned_to=logged_in_superuser,
+            supervisor=logged_in_superuser,
+            status='pending',
+        )
+
+        # Test that class is created
+        assert Task.objects.get(name='SDKfjwraa09 asd0fai093iasdfj a')
+
+
+    def testWhetherTaskRelatesToProject(self):
+        """
+        This tests whether a task can be related to a Project
+        """
+
+        # Create a user
+        User.objects.create_user(
+            username='logged_in_super_user',
+            password='loggedinSUS12391',
+            email = 'jimbo@hotmail.com'
+        )
+
+        logged_in_superuser = User.objects.get(username='logged_in_super_user')
+
+        # Create a task
+        Task.objects.create(
+            name='SDKfjwraa09 asd0fai093iasdfj a',
+            created_by=logged_in_superuser,
+            assigned_to=logged_in_superuser,
+            supervisor=logged_in_superuser,
+            status='pending',
+        )
+
+        test_task = Task.objects.get(
+            name='SDKfjwraa09 asd0fai093iasdfj a'
+        )
+
+        # Create a project
+
+        Project.objects.create(
+            name='This is a test project.',
+            purpose='The purpose is to ensure that the Projects model is ok.',
+            vision='Make surethis does not show up in testing.',
+            created_by=logged_in_superuser,
+            assigned_to=logged_in_superuser,
+            supervisor=logged_in_superuser,
+        )
+
+        test_project = Project.objects.get(
+            name='This is a test project.',
+            purpose='The purpose is to ensure that the Projects model is ok.',
+            vision='Make surethis does not show up in testing.',
+        )
+
+        test_task.related_projects.add(test_project)
+
+        # Test whether test_project is accessible through
+        # test_task.related_projects attribute
+        self.assertEqual(test_project,
+                         test_task.related_projects.get(name=test_project.name))
+
+        # Test the reverse relationship. Is the task related to the project
+        # through the project.task_set attribute
+        self.assertEqual(test_task,
+                         test_project.task_set.get(name=test_task.name))
