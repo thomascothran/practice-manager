@@ -61,9 +61,23 @@ class Project(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
     due_date = models.DateTimeField(blank=True, null=True)
-    related_project = models.ForeignKey("self", blank=True, null=True)
-    """under_project links to the project over this project, making this
+    under_projects = models.ManyToManyField("self",
+                                            blank=True,
+                                            symmetrical=False,
+                                            related_name='subordinate_projects')
+    """under_projects links to any projects over this project, making this
     project a sub project of another project"""
+    level = models.CharField(help_text=('Level refers to how high level a project is, between 1 and 3. A Level 1 ') +
+                                       ('project would be something like "start a marketing business", while ') +
+                                       ('Level 3 would be something like design a poster.'),
+                             choices=(
+                                 ('1', 'Level 1'),
+                                 ('2', 'Level 2'),
+                                 ('3', 'Level 3'),
+                             ),
+                             max_length=10,
+                             default='3',
+    )
 
     # Foreign fields relating to other apps
     related_cases = models.ManyToManyField(Case, related_name='projects_rel_to_case')
