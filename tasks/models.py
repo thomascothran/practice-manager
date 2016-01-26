@@ -108,7 +108,7 @@ class Task(models.Model):
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
     due_date = models.DateTimeField(blank=True, null=True)
-    related_project = models.ForeignKey(Project, blank=True, null=True)
+    related_projects = models.ManyToManyField(Project, blank=True)
     notes = models.TextField(blank=True)
 
     # Relations to other apps
