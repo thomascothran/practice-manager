@@ -184,3 +184,145 @@ class TaskTestCase(TestCase):
         # through the project.task_set attribute
         self.assertEqual(test_task,
                          test_project.task_set.get(name=test_task.name))
+
+
+class ContextTestCase(TestCase):
+    """
+    This class tests the Context Model
+    """
+    def test_creation_of_context_without_any_projects_or_tasks(self):
+        """
+        This tests whether contexts can be created.
+        """
+        # Create superuser
+        User.objects.create_superuser(
+            username='alskjfawowe',
+            password='aslkdjfawejrsdfkljsf',
+            email='awelkjasdnfsklja@hotmail.com'
+        )
+
+
+        test_superuser = User.objects.get(username='alskjfawowe')
+
+        # Create context
+        Context.objects.create(
+            user=test_superuser,
+            name='wrFSok23fwe0',
+        )
+
+        test_context = Context.objects.get(name='wrFSok23fwe0', user=test_superuser)
+
+        # Run Test
+        assert test_context.user == test_superuser
+
+    def test_whether_contexts_and_tasks_show_each_other(self):
+        """
+        This tests whether a context shows up in a related task's attributes
+        and vice-versa
+        """
+
+        # Create a superuser
+        User.objects.create_superuser(
+            username='alskjfawowe',
+            password='aslkdjfawejrsdfkljsf',
+            email='awelkjasdnfsklja@hotmail.com'
+        )
+        test_superuser = User.objects.get(username='alskjfawowe')
+
+        # Create a context
+        Context.objects.create(
+            name='SJDFLWEjoskdjf',
+            user=test_superuser,
+        )
+
+        test_context = Context.objects.get(name='SJDFLWEjoskdjf')
+
+        # Create a task
+        Task.objects.create(
+            name='auowenjfs8(&YJHEjjdwe',
+            created_by=test_superuser,
+            assigned_to=test_superuser,
+            supervisor=test_superuser,
+            status='pending',
+        )
+
+        test_task = Task.objects.get(name='auowenjfs8(&YJHEjjdwe')
+
+        # Add task to context
+        test_context.tasks.add(test_task)
+
+        # Test whether task shows up under context
+        self.assertEqual(test_task, test_context.tasks.get(name=test_task.name))
+        # Test whether context shows up under tasks
+        self.assertEqual(test_context, test_task.context_for_task.get(name=test_context.name))
+
+
+
+    def test_whether_contexts_and_projects_show_each_other(self):
+        """
+        This tests whether you can call the manytomany attribute of a context
+        and see the projects that are created show the context correctly
+        """
+
+        # Create a superuser
+        User.objects.create_superuser(
+            username='alskjfawowe',
+            password='aslkdjfawejrsdfkljsf',
+            email='awelkjasdnfsklja@hotmail.com'
+        )
+        test_superuser = User.objects.get(username='alskjfawowe')
+
+        # Create a project
+        Project.objects.create(
+            name='SLKJREWpsiodf.',
+            purpose='The purpose is to ensure that the Projects model is ok.',
+            vision='Make sure this does not show up in testing.',
+            created_by=test_superuser,
+            assigned_to=test_superuser,
+            supervisor=test_superuser,
+            level='2',
+        )
+        test_project = Project.objects.get(
+                name='SLKJREWpsiodf.',
+                vision='Make sure this does not show up in testing.',
+        )
+
+        # Create a context
+        Context.objects.create(
+            name='SJDFLWEjoskdjf',
+            user=test_superuser,
+        )
+
+        test_context = Context.objects.get(name='SJDFLWEjoskdjf')
+
+        # Add Project to context
+        test_context.projects.add(test_project)
+
+        # Test whether the project shows up in context attributes
+        self.assertEqual(test_project, test_context.projects.get(name=test_project.name))
+        # Test whether the context shows up in the project attributes
+        self.assertEqual(test_context, test_project.context_for_project.get(name=test_context.name))
+
+    def test_whether_context_shows_up_under_user_attributes(self):
+        """
+        This tests whether the user model can be queried for the user's task attributes.
+        """
+
+        # Create a superuser
+        User.objects.create_superuser(
+            username='alskjfawowe',
+            password='aslkdjfawejrsdfkljsf',
+            email='awelkjasdnfsklja@hotmail.com'
+        )
+        test_superuser = User.objects.get(username='alskjfawowe')
+
+        # Create a context
+        Context.objects.create(
+            name='SJDFLWEjoskdjf',
+            user=test_superuser,
+        )
+        test_context = Context.objects.get(name='SJDFLWEjoskdjf')
+
+        # Run test: assert context exist under user attribute
+        self.assertEqual(test_context, test_superuser.task_contexts.get(name='SJDFLWEjoskdjf'))
+
