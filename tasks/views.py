@@ -168,12 +168,16 @@ def IndexView(request):
         # TO DO: Need to return form with input data if it is not validated
 
 
-class TaskDetailView(PermissionRequiredMixin, DetailView):
+class TaskDetailView(UserPassesTestMixin, DetailView):
 
-    permission_required = 'tasks.can_add_task'
     model = Task
     template_name = 'tasks/task_detail.html'
 
+    def test_func(self):
+        (self.request.user in self.object.viewers.all or
+        self.request.user == self.object.created_by or
+        self.request.user == self.object.supervisor or
+        self.request.user in self.objects.assigned_to.all)
 
 class TaskCreate(PermissionRequiredMixin, CreateView):
     """
@@ -182,7 +186,7 @@ class TaskCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'tasks.can_add_task'
     template_name = 'tasks/add-task.html'
     model = Task
-    fields = ['name', 'related_project', 'due_date',
+    fields = ['name', 'related_projects', 'due_date',
               'notes', 'status', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
     def form_valid(self, form):
@@ -197,7 +201,7 @@ class TaskUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = 'tasks.can_add_task'
     template_name = 'tasks/update-task.html'
     model = Task
-    fields = ['status', 'name', 'context', 'related_project',
+    fields = ['status', 'name', 'related_projects',
               'due_date', 'notes', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
 
@@ -215,8 +219,8 @@ class ProjectCreate(PermissionRequiredMixin, CreateView):
 
     template_name = 'tasks/add-project.html'
     model = Project
-    fields = ['name', 'purpose', 'vision', 'big_steps', 'context',
-              'due_date', 'related_project', 'status', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
+    fields = ['name', 'purpose', 'vision', 'big_steps',
+              'due_date', 'related_projects', 'status', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -232,7 +236,7 @@ class ProjectUpdate(PermissionRequiredMixin, UpdateView):
     model = Project
     context_object_name = 'project'
     fields = ['name','status', 'purpose', 'vision', 'big_steps',
-              'context', 'due_date', 'related_project', 'created_by',
+              'due_date', 'related_projects', 'created_by',
               'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
 
@@ -243,7 +247,7 @@ class ProjectUpdate(PermissionRequiredMixin, UpdateView):
         # Call base implementation first to get a context
         context = super(ProjectUpdate, self).get_context_data(**kwargs)
         # TO DO: Add in querysets of related tasks
-        context['related_tasks'] = Task.objects.filter(related_project__id=self.object.id)
+        context['related_tasks'] = Task.objects.filter(related_projects__id=self.object.id)
         return context
 
 
