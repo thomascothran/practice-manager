@@ -51,7 +51,7 @@ class Project(models.Model):
     completed? Maybe split this out into a new class, similar to tasks"""
 
     created_by = models.ForeignKey(User, related_name='project_created_by', limit_choices_to={'is_staff': True})
-    assigned_to = models.ForeignKey(User, related_name='project_assigned_to', limit_choices_to={'is_staff': True})
+    assigned_to = models.ManyToManyField(User, related_name='project_assigned_to', limit_choices_to={'is_staff': True})
     """assigned_to refers to the person currently working on task"""
     supervisor = models.ForeignKey(User, related_name='project_supervisor', limit_choices_to={'is_staff': True})
     """ Supervisor refers to the person responsible for ensuring the
@@ -101,7 +101,7 @@ class Task(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
     created_by = models.ForeignKey(User, related_name='task_created_by', limit_choices_to={'is_staff': True})
-    assigned_to = models.ForeignKey(User, related_name='task_assigned_to', limit_choices_to={'is_staff': True})
+    assigned_to = models.ManyToManyField(User, related_name='task_assigned_to', limit_choices_to={'is_staff': True})
     """assigned_to refers to the person currently working on task"""
     supervisor = models.ForeignKey(User, related_name='task_supervisor', limit_choices_to={'is_staff': True})
     """ Supervisor refers to the person responsible for ensuring the
