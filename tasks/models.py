@@ -56,6 +56,9 @@ class Project(models.Model):
     supervisor = models.ForeignKey(User, related_name='project_supervisor', limit_choices_to={'is_staff': True})
     """ Supervisor refers to the person responsible for ensuring the
     task is complete"""
+    viewers = models.ManyToManyField(User,
+                                     verbose_name='Who can view this project?',
+                                     help_text='Who has permission to see this project?')
     status = models.CharField(max_length=30, choices=STATUSES, default='pending')
     """Status will be either 'pending' or 'complete'"""
     created_date = models.DateTimeField(auto_now_add=True, null=True)
@@ -103,6 +106,10 @@ class Task(models.Model):
     supervisor = models.ForeignKey(User, related_name='task_supervisor', limit_choices_to={'is_staff': True})
     """ Supervisor refers to the person responsible for ensuring the
     task is complete"""
+    viewers = models.ManyToManyField(User,
+                                     related_name='tasks_user_can_view',
+                                     verbose_name='Users who can view',
+                                     help_text='Who do you want to be able to observe this task?')
     status = models.CharField(max_length=30, choices=STATUSES, default='pending')
     """Status will be either 'pending' or 'complete'"""
     created_date = models.DateTimeField(auto_now_add=True, null=True)
