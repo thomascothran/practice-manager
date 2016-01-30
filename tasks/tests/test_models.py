@@ -29,7 +29,6 @@ class ProjectTestCase(TestCase):
             purpose='The purpose is to ensure that the Projects model is ok.',
             vision='Make surethis does not show up in testing.',
             created_by=logged_in_superuser,
-            assigned_to=logged_in_superuser,
             supervisor=logged_in_superuser,
         )
         self.assertEqual(str(test_project), test_project.name)
@@ -54,7 +53,6 @@ class ProjectTestCase(TestCase):
             purpose='The purpose is to ensure that the Projects model is ok.',
             vision='Make surethis does not show up in testing.',
             created_by=logged_in_superuser,
-            assigned_to=logged_in_superuser,
             supervisor=logged_in_superuser,
             level='1',
         )
@@ -70,7 +68,6 @@ class ProjectTestCase(TestCase):
             purpose='The purpose is to ensure that the Projects model is ok.',
             vision='Make sure this does not show up in testing.',
             created_by=logged_in_superuser,
-            assigned_to=logged_in_superuser,
             supervisor=logged_in_superuser,
             level='2',
         )
@@ -120,7 +117,6 @@ class TaskTestCase(TestCase):
         Task.objects.create(
             name='SDKfjwraa09 asd0fai093iasdfj a',
             created_by=logged_in_superuser,
-            assigned_to=logged_in_superuser,
             supervisor=logged_in_superuser,
             status='pending',
         )
@@ -147,7 +143,6 @@ class TaskTestCase(TestCase):
         Task.objects.create(
             name='SDKfjwraa09 asd0fai093iasdfj a',
             created_by=logged_in_superuser,
-            assigned_to=logged_in_superuser,
             supervisor=logged_in_superuser,
             status='pending',
         )
@@ -163,7 +158,6 @@ class TaskTestCase(TestCase):
             purpose='The purpose is to ensure that the Projects model is ok.',
             vision='Make surethis does not show up in testing.',
             created_by=logged_in_superuser,
-            assigned_to=logged_in_superuser,
             supervisor=logged_in_superuser,
         )
 
@@ -241,7 +235,6 @@ class ContextTestCase(TestCase):
         Task.objects.create(
             name='auowenjfs8(&YJHEjjdwe',
             created_by=test_superuser,
-            assigned_to=test_superuser,
             supervisor=test_superuser,
             status='pending',
         )
@@ -278,7 +271,6 @@ class ContextTestCase(TestCase):
             purpose='The purpose is to ensure that the Projects model is ok.',
             vision='Make sure this does not show up in testing.',
             created_by=test_superuser,
-            assigned_to=test_superuser,
             supervisor=test_superuser,
             level='2',
         )
