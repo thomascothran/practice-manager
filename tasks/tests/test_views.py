@@ -91,6 +91,7 @@ class TaskDetailView(TestCase):
         # Create super user
         superuser_user = User.objects.create_superuser(
             username='test_superuser492kd',
+            password='fdjfslkej0213@',
             email='sldkfjeowo0@gmail.com'
         )
 
@@ -146,7 +147,41 @@ class TaskDetailView(TestCase):
             # Assert 200 response (success)
             self.assertEqual(200, response.status_code)
 
-# class TaskCreateViewTest(TestCase):
+class TaskCreateViewTest(TestCase):
+    """
+    This class tests the TaskCreate view.
+    """
+    def test_that_task_creation_page_is_up(self):
+        """
+        This tests that the task creation page returns a 200
+        http message. Because in the future, task creation may be
+        limited, we use a superuser.
+        """
+        test_superuser = User.objects.create_superuser(
+            username='test_sup',
+            password='kalsdjfq231',
+            email='test_sup@gmail.com'
+        )
+
+        c = Client()
+        c.force_login(test_superuser)
+        response = c.get('task_manager.add_task')
+        self.assertEqual(200,
+                         response.status_code,
+                         msg=('When superuser tries to login to the task creation page, the server '+
+                              'does not return a 200 code. This indicates there is something wrong ' +
+                              'with the task creation view.')
+                         )
+
+    def test_that_anonymous_users_are_redirected_to_login_page(self):
+        """
+        This tests whether users who aren't logged in are forced to login
+        when they try to create a task.
+        """
+        c = Client()
+        response = c.get(reverse('task_manager:add_task'), follow=True)
+        redirect_url = 'accounts/login/?next=%s' % reverse('task_manager:add_task')
+        self.assertRedirects(response, redirect_url)
 
 
 class TaskUpdateViewTest(TestCase):
@@ -245,6 +280,7 @@ class TaskUpdateViewTest(TestCase):
         # Create super user
         superuser_user = User.objects.create_superuser(
             username='test_superuser492kd',
+            password='asdkjf234fj',
             email='sldkfjeowo0@gmail.com'
         )
 
