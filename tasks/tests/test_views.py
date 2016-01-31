@@ -5,6 +5,7 @@ from django.core.urlresolvers import reverse
 
 from ..models import Task
 
+
 class IndexViewTests(TestCase):
     """
     This class tests the index view
@@ -19,6 +20,7 @@ class IndexViewTests(TestCase):
         response = c.get(reverse('task_manager:index'), follow=True)
         url_redirect = '/accounts/login/?next=%s' % reverse('task_manager:index')
         self.assertRedirects(response, url_redirect)
+
 
 class TaskDetailView(TestCase):
     """
@@ -146,6 +148,7 @@ class TaskDetailView(TestCase):
             response = c.get(reverse('task_manager:task_detail', kwargs={'pk': test_task.id}))
             # Assert 200 response (success)
             self.assertEqual(200, response.status_code)
+
 
 class TaskCreateViewTest(TestCase):
     """
@@ -335,3 +338,4 @@ class TaskUpdateViewTest(TestCase):
             response = c.get(reverse('task_manager:task_update', kwargs={'pk': test_task.id}))
             # Assert 200 response (success)
             self.assertEqual(200, response.status_code)
+
