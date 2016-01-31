@@ -339,3 +339,16 @@ class TaskUpdateViewTest(TestCase):
             # Assert 200 response (success)
             self.assertEqual(200, response.status_code)
 
+# TO DO: class ProjectDetailViewTest(TestCase):
+
+# TO DO: class ProjectCreateViewTest(TestCase):
+
+# TO DO: class ProjectUpdateViewTest(TestCase):
+
+# TO DO: class SettingsViewTest(TestCase):
+
+# TO DO: class ContextTagCreate(TestCase):
+
+# TO DO: class ContextTagDetail(TestCase):
+
+
