@@ -168,16 +168,12 @@ def IndexView(request):
         # TO DO: Need to return form with input data if it is not validated
 
 
-class TaskDetailView(UserPassesTestMixin, DetailView):
+class TaskDetailView(DetailView):
 
     model = Task
     template_name = 'tasks/task_detail.html'
 
-    def test_func(self):
-        (self.request.user in self.object.viewers.all or
-        self.request.user == self.object.created_by or
-        self.request.user == self.object.supervisor or
-        self.request.user in self.objects.assigned_to.all)
+
 
 class TaskCreate(PermissionRequiredMixin, CreateView):
     """
