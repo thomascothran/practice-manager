@@ -28,8 +28,8 @@
                 <tbody>
                 {% for task in task_list %}
                     <tr>
-                        <td><a href="{% url 'task_manager:view_task' task.id %}">{{ task.name }}</a></td>
-                        <td>{{ task.assigned_to }}</td>
+                        <td><a href="{% url 'task_manager:task_detail' task.id %}">{{ task.name }}</a></td>
+                        <td>{{ task.assigned_to.all }}</td>
                         <td>{{ task.supervisor }}</td>
                         <td>{{ task.context }}</td>
                         <td>{{ task.priority }}</td>
