@@ -216,7 +216,7 @@ class ProjectCreate(PermissionRequiredMixin, CreateView):
     template_name = 'tasks/add-project.html'
     model = Project
     fields = ['name', 'purpose', 'vision', 'big_steps',
-              'due_date', 'related_projects', 'status', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
+              'due_date', 'under_projects', 'status', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
