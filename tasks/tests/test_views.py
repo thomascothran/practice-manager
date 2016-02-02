@@ -5,6 +5,11 @@ from django.core.urlresolvers import reverse
 
 from ..models import Task, Project, Context
 
+# LOGGING SETTINGS
+
+logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
+logging.debug('Start of tasks/views.py')
+
 
 class IndexViewTests(TestCase):
     """
