@@ -232,7 +232,7 @@ class ProjectUpdate(PermissionRequiredMixin, UpdateView):
     model = Project
     context_object_name = 'project'
     fields = ['name','status', 'purpose', 'vision', 'big_steps',
-              'due_date', 'related_projects', 'created_by',
+              'due_date', 'under_projects', 'created_by',
               'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
 
