@@ -9,7 +9,7 @@
         </div>
 
         <div class="panel-body">
-        <form action="{% url 'task_manager:view_task' task.id %}" method="POST">
+        <form action="{% url 'task_manager:task_update' task.id %}" method="POST">
             {% csrf_token %}
             {{ form|crispy }}
             <BR><BR>
