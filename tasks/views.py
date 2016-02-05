@@ -204,7 +204,7 @@ class TaskUpdate(PermissionRequiredMixin, UpdateView):
 class ProjectDetailView(PermissionRequiredMixin, generic.DetailView):
     permission_required = 'tasks.can_add_task'
     model = Project
-    template_name = 'tasks/project-detail.html'
+    template_name = 'tasks/project_detail.html'
 
 
 class ProjectCreate(PermissionRequiredMixin, CreateView):
