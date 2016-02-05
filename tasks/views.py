@@ -168,10 +168,32 @@ def IndexView(request):
         # TO DO: Need to return form with input data if it is not validated
 
 
-class TaskDetailView(DetailView):
+class TaskDetailView(UserPassesTestMixin, DetailView):
 
     model = Task
     template_name = 'tasks/task_detail.html'
+
+    def test_func(self):
+        """
+        Test to ensure that user is authorized to view the task
+        """
+        # If the user is not active, they don't get access
+        if not self.request.user.is_active:
+            return False
+        # Check to see if users should have access to teh task detail
+        else:
+            return any(
+                        [
+                            # Allow our staff to have access
+                            self.request.user.is_superuser,
+                            self.request.user.is_staff,
+                            # Allow related users to have access
+                            self.request.user == self.get_object().created_by,
+                            self.request.user in list(self.get_object().assigned_to.all()),
+                            self.request.user == self.get_object().supervisor,
+                            self.request.user in list(self.get_object().viewers.all()),
+                        ]
+            )
 
 
 
@@ -292,4 +314,9 @@ class ContextTagDetail(UserPassesTestMixin, DetailView):
         logging.debug('Entered test_func in ContextTagDetail view')
         logging.debug('self.request.user is %s' % self.request.user)
         context_object = self.get_object()
-        return self.request.user == context_object.user
+        # Ensure user is not inactive
+        if not self.request.user.is_active:
+            return False
+        # If user is active, ensure they are the user for the context
+        else:
+            return self.request.user == context_object.user

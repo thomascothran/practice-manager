@@ -3,12 +3,11 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
+import logging
+
 from ..models import Task, Project, Context
 
 # LOGGING SETTINGS
-
-logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
-logging.debug('Start of tasks/views.py')
 
 
 class IndexViewTests(TestCase):
@@ -51,7 +50,6 @@ class IndexViewTests(TestCase):
         self.assertRedirects(response, expected_url=expected_url)
 
 
-
 class TaskDetailView(TestCase):
     """
     This class tests the TaskDetail view
@@ -79,7 +77,7 @@ class TaskDetailView(TestCase):
 
         c = Client()
         response = c.get(reverse('task_manager:task_detail', kwargs={'pk': test_task.id}), follow=True)
-        redirect_url = 'accounts/login/?next=%s' % reverse('task_manager:task_detail', kwargs={'pk': test_task.id})
+        redirect_url = '/accounts/login/?next=%s' % reverse('task_manager:task_detail', kwargs={'pk': test_task.id})
         self.assertRedirects(response, redirect_url)
 
     def test_that_logged_in_users_cant_view_task_if_they_are_not_involved(self):
@@ -113,8 +111,8 @@ class TaskDetailView(TestCase):
         c = Client()
         c.login(username=test_unrelated_user.username, password=test_unrelated_user.password)
         response = c.get(test_task.get_absolute_url(), follow=True)
-        print(response.status_code)
-        self.assertEqual(302, response.status_code)
+        expected_redirect_url = str('%s?next=%s' % (str(reverse('django_auth:login')), test_task.get_absolute_url()))
+        self.assertRedirects( response, expected_redirect_url)
 
     def test_that_authorized_users_can_view_tasks(self):
         """
@@ -175,9 +173,13 @@ class TaskDetailView(TestCase):
         for authorized_user in authorized_users:
             c.force_login(authorized_user)
             # Request task update page
-            response = c.get(reverse('task_manager:task_detail', kwargs={'pk': test_task.id}))
+            response = c.get(reverse('task_manager:task_detail', kwargs={'pk': test_task.id}), follow=True)
             # Assert 200 response (success)
-            self.assertEqual(200, response.status_code)
+            self.assertEqual(
+                200,
+                response.status_code,
+                msg='Authorized User %s redirected. Response: %s' % (authorized_user, response)
+            )
 
     def test_that_inactive_users_are_redirected(self):
         """
@@ -240,7 +242,7 @@ class TaskCreateViewTest(TestCase):
 
         c = Client()
         c.force_login(test_superuser)
-        response = c.get('task_manager.add_task')
+        response = c.get(reverse('task_manager:add_task'))
         self.assertEqual(200,
                          response.status_code,
                          msg=('When superuser tries to login to the task creation page, the server '+
@@ -255,7 +257,7 @@ class TaskCreateViewTest(TestCase):
         """
         c = Client()
         response = c.get(reverse('task_manager:add_task'), follow=True)
-        redirect_url = 'accounts/login/?next=%s' % reverse('task_manager:add_task')
+        redirect_url = '/accounts/login/?next=%s' % reverse('task_manager:add_task')
         self.assertRedirects(response, redirect_url)
 
     def test_that_inactive_users_are_redirected(self):
@@ -281,7 +283,6 @@ class TaskCreateViewTest(TestCase):
         # Test to see if user was redirected
         expected_url = ('/accounts/login/?next=%s' % reverse('task_manager:add_task'))
         self.assertRedirects(response, expected_url=expected_url)
-
 
 
 class TaskUpdateViewTest(TestCase):
@@ -337,9 +338,13 @@ class TaskUpdateViewTest(TestCase):
         c.force_login(unauthorized_user)
 
         # Request Task Update page
-        response = c.get(reverse('task_manager:task_update', kwargs={'pk': test_task.id}))
+        response = c.get(reverse('task_manager:task_update', kwargs={'pk': test_task.id}), follow=True)
         expected_url = '/accounts/login/?next=%s' % reverse('task_manager:task_update', kwargs={'pk': test_task.id})
-        self.assertRedirects(response, expected_url=expected_url)
+        self.assertRedirects(
+                response,
+                expected_url=expected_url,
+                msg_prefix='Unauthorized users have access to the task update page.'
+        )
 
     def test_that_viewers_of_tasks_cant_edit_task(self):
         # Create superuser (so that we can create task)
@@ -379,7 +384,7 @@ class TaskUpdateViewTest(TestCase):
 
         # Create super user
         superuser_user = User.objects.create_superuser(
-            username='test_superuser492kd',
+            username='test_superuser',
             password='asdkjf234fj',
             email='sldkfjeowo0@gmail.com'
         )
@@ -392,21 +397,21 @@ class TaskUpdateViewTest(TestCase):
 
         # Create creator user (to be the creator of the task)
         creator_user = User.objects.create_user(
-            username='logged_in_creator_user',
+            username='test_creator_user',
             password='loggedinSUS12391',
             email = 'jimbo@hotmail.com'
         )
 
         # Create supervisor user
         supervisor_user = User.objects.create(
-            username='asdll3232lfjeworjijww39',
+            username='test_supervisoruser',
             email='j2onjon@gmail.com'
         )
 
         # Create assigned user
 
         assigned_user = User.objects.create(
-            username='asdlfjeasfjlworjijww39',
+            username='test_assigneduser',
             email='jonj9on@gmail.com'
         )
 
@@ -432,9 +437,13 @@ class TaskUpdateViewTest(TestCase):
         for authorized_user in authorized_users:
             c.force_login(authorized_user)
             # Request task update page
-            response = c.get(reverse('task_manager:task_update', kwargs={'pk': test_task.id}))
-            # Assert 200 response (success)
-            self.assertEqual(200, response.status_code)
+            response = c.get(reverse('task_manager:task_update', kwargs={'pk': test_task.id}), follow=True)
+            # Assert 200 http code (success)
+            self.assertEqual(
+                200,
+                response.status_code,
+                msg='User %s does not get a 200 http code for request %s' % (authorized_user, response)
+            )
 
     def test_that_inactive_users_are_redirected(self):
         """
@@ -594,7 +603,7 @@ class ProjectDetailViewTest(TestCase):
         for authorized_user in authorized_users:
             c.force_login(authorized_user)
             # Request task update page
-            response = c.get(reverse('task_manager:project_detail', kwargs={'pk': test_project.id}))
+            response = c.get(reverse('task_manager:project_detail', kwargs={'pk': test_project.id}), follow=True)
             # Assert 200 response (success)
             self.assertEqual(200, response.status_code)
 
@@ -640,6 +649,7 @@ class ProjectDetailViewTest(TestCase):
                         reverse('task_manager:project_detail', kwargs={'pk': test_project.id}))
         self.assertRedirects(response, expected_url=expected_url)
 
+
 class ProjectCreateViewTest(TestCase):
     """
     This class test the ProjectCreate View
@@ -658,12 +668,12 @@ class ProjectCreateViewTest(TestCase):
 
         c = Client()
         c.force_login(test_superuser)
-        response = c.get('task_manager.add_project')
+        response = c.get(reverse('task_manager:add_project'), follow=True)
         self.assertEqual(200,
                          response.status_code,
                          msg=('When superuser tries to login to the task creation page, the server '+
-                              'does not return a 200 code. This indicates there is something wrong ' +
-                              'with the task creation view.')
+                              'does not return a 200 code. The user is redirected to %s.' %
+                              response.redirect_chain)
                          )
 
     def test_that_anonymous_users_are_redirected_to_login_page(self):
@@ -673,7 +683,7 @@ class ProjectCreateViewTest(TestCase):
         """
         c = Client()
         response = c.get(reverse('task_manager:add_project'), follow=True)
-        redirect_url = 'accounts/login/?next=%s' % reverse('task_manager:add_project')
+        redirect_url = '/accounts/login/?next=%s' % reverse('task_manager:add_project')
         self.assertRedirects(response, redirect_url)
 
     def test_that_inactive_users_are_redirected(self):
@@ -699,6 +709,7 @@ class ProjectCreateViewTest(TestCase):
         # Test to see if user was redirected
         expected_url = ('/accounts/login/?next=%s' % reverse('task_manager:add_project'))
         self.assertRedirects(response, expected_url=expected_url)
+
 
 class ProjectUpdateViewTest(TestCase):
     """
@@ -851,9 +862,13 @@ class ProjectUpdateViewTest(TestCase):
         for authorized_user in authorized_users:
             c.force_login(authorized_user)
             # Request project update page
-            response = c.get(reverse('task_manager:update-project', kwargs={'pk': test_project.id}))
+            response = c.get(reverse('task_manager:update-project', kwargs={'pk': test_project.id}), follow=True)
             # Assert 200 response (success)
-            self.assertEqual(200, response.status_code)
+            self.assertEqual(
+                200,
+                response.status_code,
+                msg='Authorized user %s redirected. Response: %s' % (authorized_user, response)
+            )
 
     def test_that_inactive_users_are_redirected(self):
         """
@@ -896,6 +911,7 @@ class ProjectUpdateViewTest(TestCase):
         expected_url = ('/accounts/login/?next=%s' %
                         reverse('task_manager:update-project', kwargs={'pk': test_project.id}))
         self.assertRedirects(response, expected_url=expected_url)
+
 
 class SettingsViewTest(TestCase):
     """
@@ -1027,7 +1043,7 @@ class ContextTagDetail(TestCase):
                                                             kwargs={'pk': test_context.id})
         self.assertRedirects(response, expected_url=expected_url)
 
-    def test_that_authorized_users_can_get_to_project_update_view(self):
+    def test_that_authorized_users_can_get_to_context_detail_view(self):
 
         # Create super user
         superuser_user = User.objects.create_superuser(
@@ -1066,9 +1082,13 @@ class ContextTagDetail(TestCase):
         for authorized_user in authorized_users:
             c.force_login(authorized_user)
             # Request context detail page
-            response = c.get(reverse('task_manager:context_detail', kwargs={'pk': test_context.id}))
+            response = c.get(reverse('task_manager:context_detail', kwargs={'pk': test_context.id}), follow=True)
             # Assert 200 response (success)
-            self.assertEqual(200, response.status_code)
+            self.assertEqual(
+                200,
+                response.status_code,
+                msg='Authorized user %s redirected. Response: %s' % (authorized_user, response)
+            )
 
     def test_that_inactive_users_are_redirected(self):
         """
