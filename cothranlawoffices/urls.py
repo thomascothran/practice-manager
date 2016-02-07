@@ -20,7 +20,7 @@ from django.contrib.auth import urls
 urlpatterns = [
     url(r'^task-manager/', include('tasks.urls', namespace="task_manager")),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^accounts/', include('django.contrib.auth.urls')),
+    url(r'^accounts/', include('django.contrib.auth.urls', namespace='django_auth')),
     url(r'^case-manager/', include('case_manager.urls',  namespace='case_manager')),
     url(r'^people-and-property/', include('people_and_property.urls', namespace='people_and_property')),
     url(r'^file-manager/', include('file_manager.urls', namespace='file_manager')),
