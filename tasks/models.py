@@ -83,8 +83,8 @@ class Project(models.Model):
     )
 
     # Foreign fields relating to other apps
-    related_cases = models.ManyToManyField(Case, related_name='projects_rel_to_case')
-    related_persons = models.ManyToManyField(Person, related_name='projects_rel_to_person')
+    related_cases = models.ManyToManyField(Case, related_name='projects_rel_to_case', blank=True)
+    related_persons = models.ManyToManyField(Person, related_name='projects_rel_to_person', blank=True)
 
     def __str__(self):
         return self.name
@@ -119,8 +119,8 @@ class Task(models.Model):
     notes = models.TextField(blank=True)
 
     # Relations to other apps
-    related_cases = models.ManyToManyField(Case, related_name='tasks_rel_to_case')
-    related_persons = models.ManyToManyField(Person, related_name='tasks_rel_to_person')
+    related_cases = models.ManyToManyField(Case, related_name='tasks_rel_to_case', blank=True)
+    related_persons = models.ManyToManyField(Person, related_name='tasks_rel_to_person', blank=True)
 
     def __str__(self):
         return self.name
