@@ -124,7 +124,6 @@ class TaskTestCase(TestCase):
         # Test that class is created
         assert Task.objects.get(name='SDKfjwraa09 asd0fai093iasdfj a')
 
-
     def testWhetherTaskRelatesToProject(self):
         """
         This tests whether a task can be related to a Project
@@ -242,12 +241,12 @@ class ContextTestCase(TestCase):
         test_task = Task.objects.get(name='auowenjfs8(&YJHEjjdwe')
 
         # Add task to context
-        test_context.tasks.add(test_task)
+        test_task.context.add(test_context)
 
         # Test whether task shows up under context
-        self.assertEqual(test_task, test_context.tasks.get(name=test_task.name))
+        self.assertEqual(test_task, test_context.tasks_under_context.get(name=test_task.name))
         # Test whether context shows up under tasks
-        self.assertEqual(test_context, test_task.context_for_task.get(name=test_context.name))
+        self.assertEqual(test_context, test_task.context.get(name=test_context.name))
 
 
 
@@ -288,12 +287,12 @@ class ContextTestCase(TestCase):
         test_context = Context.objects.get(name='SJDFLWEjoskdjf')
 
         # Add Project to context
-        test_context.projects.add(test_project)
+        test_project.context.add(test_context)
 
         # Test whether the project shows up in context attributes
-        self.assertEqual(test_project, test_context.projects.get(name=test_project.name))
+        self.assertEqual(test_project, test_context.projects_under_context.get(name=test_project.name))
         # Test whether the context shows up in the project attributes
-        self.assertEqual(test_context, test_project.context_for_project.get(name=test_context.name))
+        self.assertEqual(test_context, test_project.context.get(name=test_context.name))
 
     def test_whether_context_shows_up_under_user_attributes(self):
         """

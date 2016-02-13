@@ -16,10 +16,9 @@ test_user_password = 'ska;fljewerwfjsl#@2'
 test_user_email = 'testuser98@gmail.com'
 
 
-class BasicTest(StaticLiveServerTestCase):
+class SeleniumTest(StaticLiveServerTestCase):
     """
-    This class just checks to make sure that the basics of the task
-    manager are up and working.
+    This class tests the task functionalities of the task manager
     """
 
     # Setup and teardown
@@ -30,6 +29,7 @@ class BasicTest(StaticLiveServerTestCase):
     def tearDown(self):
         self.browser.quit()
 
+    # Helper Functions
     def create_user(self, superuser=True):
         """
         This is a helper function to create and return a user. Don't change
@@ -67,7 +67,7 @@ class BasicTest(StaticLiveServerTestCase):
         self.browser.implicitly_wait(10)
 
 
-    def test_create_task_and_check_that_it_shows_up_in_the_task_manager_index(self):
+    def test_create_task_and_check_that_it_shows_up_in_the_task_manager_index_and_filter(self):
         # Create user
         self.user = self.create_user(superuser=True)
         # Log the user in
@@ -94,6 +94,8 @@ class BasicTest(StaticLiveServerTestCase):
         assigned_to_dropdown.select_by_visible_text(str(self.user))
         supervisor_dropdown = Select(self.browser.find_element_by_name('supervisor'))
         supervisor_dropdown.select_by_visible_text(str(self.user))
+        context_input = Select(self.browser.find_element_by_name('context'))
+        context_input.select_by_visible_text('@work')
         name_input.submit()
         self.browser.implicitly_wait(4)
         # Go to the index page, make sure test task shows up
@@ -108,6 +110,7 @@ class BasicTest(StaticLiveServerTestCase):
             any('Test Name BfC02@@' in row.text for row in task_table_rows),
             msg='The task is not showing up in the task index table'
         )
+        # TO DO: Check that the task shows up in the filter
 
 
         # How to select options: https://stackoverflow.com/questions/24498976/python-selenium-select-from-drop-down-menu
