@@ -7,6 +7,14 @@ from django.test import TestCase, RequestFactory
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 
+# Constants
+test_superuser_username = 'test_superuser_998'          # Setting up username and password strings
+test_superuser_email = 'test_superuser_998@gmail.com'   # here so that they can be referenced below
+test_superuser_password = 'slafj3430WIER93@#'
+test_user_username = 'test_user_998'
+test_user_password = 'ska;fljewerwfjsl#@2'
+test_user_email = 'testuser98@gmail.com'
+
 
 class BasicTest(StaticLiveServerTestCase):
     """
@@ -14,8 +22,7 @@ class BasicTest(StaticLiveServerTestCase):
     manager are up and working.
     """
 
-    test_supervisor = None  # Need to set this variable so we can set it in function below
-
+    # Setup and teardown
     def setUp(self):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(4)
@@ -30,37 +37,41 @@ class BasicTest(StaticLiveServerTestCase):
         """
         if superuser == True:
             test_superuser = User.objects.create_superuser(
-                username='test_superuser_998',
-                email='test_superuser_998@gmail.com',
-                password='slafj3430WIER93@#',
+                username=test_superuser_username,
+                email=test_superuser_email,
+                password=test_superuser_password,
             )
             return test_superuser
         else:
             test_user = User.objects.create_user(
-                username='test_user_998',
-                email='testuser98@gmail.com',
-                password='ska;fljewerwfjsl#@2'
+                username=test_user_username,
+                email=test_user_email,
+                password=test_user_password
             )
             return test_user
 
-    def test_whether_user_can_login(self, user_object, password):
+    def log_user_in(self, user_object, password):
         """
         This is designed to be a helper function that logs the user in.
-        :param user_object:
-        :param password:
+        :param user_object: this is the user
+        :param password: this is a string representing the password
         :return:
         """
-
-    def test_create_task_and_check_that_it_shows_up_in_the_task_manager_index(self):
-        # Create user
-        self.user = self.create_user(superuser=True)
         # Try to pull up task index, make sure you get redirected
         self.browser.get(str(self.live_server_url) + reverse('task_manager:index'))
         self.assertTrue('login' in self.browser.current_url)
         # Login
-        self.browser.find_element_by_name('username').send_keys('test_superuser_998')
-        self.browser.find_element_by_name('password').send_keys('slafj3430WIER93@#')
+        self.browser.find_element_by_name('username').send_keys(user_object.username)
+        self.browser.find_element_by_name('password').send_keys(password)
         self.browser.find_element_by_name('submit').click()
+        self.browser.implicitly_wait(10)
+
+
+    def test_create_task_and_check_that_it_shows_up_in_the_task_manager_index(self):
+        # Create user
+        self.user = self.create_user(superuser=True)
+        # Log the user in
+        self.log_user_in(user_object=self.user, password=test_superuser_password)
         self.browser.implicitly_wait(10)
         # Pull up the main task manager page
         self.browser.get(str(self.live_server_url) + reverse('task_manager:index'))
