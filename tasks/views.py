@@ -204,7 +204,7 @@ class TaskCreate(PermissionRequiredMixin, CreateView):
     permission_required = 'tasks.can_add_task'
     template_name = 'tasks/add-task.html'
     model = Task
-    fields = ['name', 'related_projects', 'due_date',
+    fields = ['name', 'related_projects', 'due_date', 'context',
               'notes', 'status', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
     def form_valid(self, form):
@@ -237,7 +237,7 @@ class ProjectCreate(PermissionRequiredMixin, CreateView):
 
     template_name = 'tasks/add-project.html'
     model = Project
-    fields = ['name', 'purpose', 'vision', 'big_steps',
+    fields = ['name', 'purpose', 'vision', 'big_steps', 'context',
               'due_date', 'under_projects', 'status', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
     def form_valid(self, form):
