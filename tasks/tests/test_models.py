@@ -207,6 +207,7 @@ class ContextTestCase(TestCase):
 
         # Run Test
         assert test_context.user == test_superuser
+        assert test_context == Context.objects.get(name='wrFSok23fwe0')
 
     def test_whether_contexts_and_tasks_show_each_other(self):
         """

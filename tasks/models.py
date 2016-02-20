@@ -22,10 +22,10 @@ PRIORITIES = (
     ('9-On Hold', '9-On Hold'),
 )
 
-STATUSES = (
+STATUSES = [
     ('pending', 'pending'),
     ('complete', 'complete')
-)
+]
 
 
 # CLASSES
@@ -39,7 +39,7 @@ class Context(models.Model):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(max_length=30, default='@work')
+    name = models.CharField(max_length=30)
     description = models.TextField(max_length=200, blank=True)
     user = models.ForeignKey(User, related_name='task_contexts')
 

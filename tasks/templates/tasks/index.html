@@ -103,7 +103,7 @@
             <form action="{% url 'task_manager:index' %}" method="POST">
                 {% csrf_token %}
                 {{ task_filter|crispy }}
-                <input type="submit" value="filter">
+                <input type="submit" name="task_filter_submit" value="filter">
             </form>
         </div>
     </div>

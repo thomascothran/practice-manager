@@ -9,7 +9,8 @@ from django import forms
 
 from .models import Task, Project, Context
 from .forms import TaskFilter
-from .utils import get_users_contexts
+from .utils import apply_filters_from_task_filter
+
 
 import logging
 
@@ -30,142 +31,64 @@ def IndexView(request):
     logging.debug('Entered IndexView in tasks/views.py')
     logging.debug('request.method is %s' % str(request.method))
 
-    # Dynamically Generate Task Filter
-    task_filter = TaskFilter(user=request.user)
+    # Set user's default task_list
+    task_list = Task.objects.filter(
+        Q(status='pending'),
+        Q(created_by=request.user) | Q(assigned_to=request.user) | Q(supervisor=request.user)
+    )
+    task_list = task_list.order_by('-updated_date')
+    # Set user's default project list
+    project_list = Project.objects.filter(
+        Q(status='pending'),
+        Q(created_by=request.user) | Q(assigned_to=request.user) | Q(supervisor=request.user)
+    )
+    project_list = project_list.order_by('-created_date')
 
     # Filter task list if the form
     if request.method != "POST":
         logging.debug('No post data. Returning all tasks and projects.')
 
-        # TO DO: Filter task list down to show only tasks created by,
-        # assigned to, or supervised by the current user
-
-        task_list = Task.objects.filter(
-            Q(status='pending'),
-            Q(created_by=request.user) | Q(assigned_to=request.user) | Q(supervisor=request.user)
-        )
-        task_list = task_list.order_by('-updated_date')
-
-        # Filter task list down to show only projects created by,
-        # assigned to, or supervised by the current user
-        project_list = Project.objects.filter(
-            Q(status='pending'),
-            Q(created_by=request.user) | Q(assigned_to=request.user) | Q(supervisor=request.user)
-        )
-        project_list = project_list.order_by('-created_date')
+        # Dynamically Generate Task Filter
+        task_filter = TaskFilter(user=request.user)
 
         # Set context to be sent to the template
         context = {'task_list': task_list, 'project_list': project_list, 'task_filter': task_filter}
         return render(request, 'tasks/index.html', context)
 
     else:
-        # TO DO: Filter for context, priority, status
+        # TO DO: Filter for context, status
         post_data = TaskFilter(request.POST)
-        logging.debug('Created dict for post data.')
+        # Dynamically generate task_filter
+        task_filter = TaskFilter(user=request.user)
+        logging.debug('Created dict for post data. Dict is %s' % post_data)
 
         # Test whether form data is valid, if so filter
         if post_data.is_valid():
             logging.debug('Post data valid. About to set filters')
+            cleaned_data = post_data.cleaned_data
+            # Get task and project list by applying filters
 
-            # Set filters
-            priority_filter = post_data.cleaned_data['priority_filter']
-            context_filter = post_data.cleaned_data['context_filter']
-            status_filter = post_data.cleaned_data['status_filter']
-            type_filter = post_data.cleaned_data['item_filter']
-            role_filter = post_data.cleaned_data['role_filter']
-            logging.debug('Filter variables assigned. About to apply filters')
-
-            # Set initial task and project lists
-            logging.debug('Created task list and project list variables. Assigned all'
-                          + 'objects to them')
-
-            # Set initial task and project lists, limiting them to what the user is allowed
-            # to see
-            task_list = Task.objects.filter(
-                Q(created_by=request.user) | Q(assigned_to=request.user) | Q(supervisor=request.user)
-            )
-            project_list = Task.objects.filter(
-                Q(created_by=request.user) | Q(assigned_to=request.user) | Q(supervisor=request.user)
+            (task_list, project_list) = apply_filters_from_task_filter(     # Use multiple assignment trick
+                requesting_user=request.user,
+                post_dict=cleaned_data
             )
 
-            # Apply context, priority, and status filters to projects
-            logging.debug('About to apply type filters.')
-            if type_filter == 'both':
-                logging.debug('type_filter is both. About to apply context, priority,' +
-                              ' and status filters to both tasks and projects')
-                task_list = task_list.filter(priority=priority_filter,
-                                                 context=context_filter,
-                                                 status=status_filter)
-                project_list = project_list.filter(priority=priority_filter,
-                                                 context=context_filter,
-                                                 status=status_filter)
-                logging.debug('Set context, priority, and status filters to ' +
-                              'task and project lists. About to apply role filters')
-                # Apply role filters
-                if role_filter == 'created_by':
-                    logging.debug('created_by role filter selected. Applying to tasks' +
-                                  'and projects')
-                    task_list = task_list.filter(created_by=request.user)
-                    project_list = project_list.filter(created_by=request.user)
-                elif role_filter == 'supervisor':
-                    logging.debug('supervisor role_filter selected. About to apply to ' +
-                                  'tasks and projects')
-                    task_list = task_list.filter(supervisor=request.user)
-                    project_list = project_list.filter(supervisor=request.user)
-                elif role_filter == 'assigned_to':
-                    logging.debug('assigned_to role filter selected. About to apply to ' +
-                                  'both tasks and projects')
-                    task_list = task_list.filter(supervisor=request.user)
-                    project_list = project_list.filter(supervisor=request.user)
-
-            if type_filter == 'project':
-                logging.debug('type_filter set to project. Setting task_list to none.')
-                task_list = None
-                logging.debug('About to filter projects for context, priority, and status.')
-                project_list = Project.objects.filter(priority=priority_filter,
-                                                 context=context_filter,
-                                                 status=status_filter)
-                # Apply role filters
-                logging.debug('About to apply role filters')
-                if role_filter == 'created_by':
-                    logging.debug('role_filter set to created_by. About to filter projects.')
-                    project_list = project_list.filter(created_by=request.user)
-                elif role_filter == 'supervisor':
-                    logging.debug('role_filter set to supervisor. About to filter projects')
-                    project_list = project_list.filter(supervisor=request.user)
-                elif role_filter == 'assigned_to':
-                    logging.debug('role_filter set to assigned_to. About to filter projects.')
-                    project_list = project_list.filter(supervisor=request.user)
-            if type_filter == 'task':
-                logging.debug('type_filter set to task. Setting project_list to None')
-                logging.debug('Filtering task_list for context, priority, and status')
-                task_list = task_list = Task.objects.filter(priority=priority_filter,
-                                                 context=context_filter,
-                                                 status=status_filter)
-                project_list = None
-                # Apply role filters
-                logging.debug('About to apply role filters')
-                if role_filter == 'created_by':
-                    logging.debug('role_filter set to created_by. Filtering tasks')
-                    task_list = task_list.filter(created_by=request.user)
-                elif role_filter == 'supervisor':
-                    logging.debug('role_filter set to supervisor. Filtering tasks')
-                    task_list = task_list.filter(supervisor=request.user)
-                elif role_filter == 'assigned_to':
-                    logging.debug('role_filter set to assigned_to. Filtering tasks')
-                    task_list = task_list.filter(supervisor=request.user)
-            # List Notifications
-            notifications = [('FILTERS: Context: %s | Priority: %s | Status: %s | Type: %s | Role: %s'
-                             % (context_filter, priority_filter, status_filter, type_filter, role_filter))]
-            ''' Notifications put in a list so that multiple notifications can be displayed '''
-            # Create Context
-            context = {'task_list': task_list,
+            # Set context to be passed to render
+            context = {'task_filter': task_filter,
+                       'task_list': task_list,
                        'project_list': project_list,
-                       'task_filter': task_filter,
-                       'notifications': notifications}
+            }
             # Return HttpResponse
             return render(request, 'tasks/index.html', context)
-        # TO DO: Need to return form with input data if it is not validated
+        else:
+            # The form did not validate.Return default task list,
+            # along with bound task filter which should show errors
+            context = {
+                'task_filter': task_filter,
+                'task_list': task_list,
+                'project_list': project_list,
+            }
+            return render(request, 'tasks/index.html', context)
 
 
 class TaskDetailView(UserPassesTestMixin, DetailView):

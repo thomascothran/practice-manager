@@ -1,7 +1,6 @@
 from django import forms
 
-from .models import PRIORITIES, STATUSES
-from .utils import get_users_contexts
+from .models import PRIORITIES, STATUSES, Context
 
 # Constants
 
@@ -18,6 +17,9 @@ ROLE = (
     ('assigned_to', 'currently assigned'),
 )
 
+# Contants
+STATUSES.append(('any', 'any'))  # Add an any option so that you can get all statuses
+
 # Classes
 
 
@@ -31,12 +33,12 @@ class TaskFilter(forms.Form):
         :param user: This is the request.user
         """
         super(TaskFilter, self).__init__(*args, **kwargs)
-        self.fields['context_filter'].queryset = get_users_contexts(user)
+        self.fields['context_filter'].queryset = Context.objects.filter(user=user)
 
-    priority_filter = forms.ChoiceField(label='Priority',
-                                        choices=PRIORITIES)
-    context_filter = forms.ModelMultipleChoiceField(label='Context',
-                                                    queryset=None)      # Queryset modified in init above
+    context_filter = forms.ModelChoiceField(
+        label='Context',
+        queryset=None      # Queryset modified in init above
+    )
     status_filter = forms.ChoiceField(label='Status',
                                       choices=STATUSES)
     item_filter = forms.ChoiceField(label='Type',

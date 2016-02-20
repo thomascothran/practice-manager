@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Project, Task
+from .models import Project, Task, Context
 
 # CLASSES
 
@@ -44,7 +44,21 @@ class ProjectAdmin(admin.ModelAdmin):
 
     search_fields = ['name', 'purpose', 'vision', 'big_steps']
 
+class ContextAdmin(admin.ModelAdmin):
+    fieldsets = [
+        ('General',     {'fields': ['name', 'description']}),
+        ('Related',     {'fields': ['user']}),
+    ]
+
+    list_display = ['name', 'description', 'user']
+
+    list_filter = ['name', 'description', 'user']
+
+    search_fields = ['name', 'description', 'user']
+
+
 # Register your models here.
 
 admin.site.register(Project, ProjectAdmin)
 admin.site.register(Task, TaskAdmin)
+admin.site.register(Context, ContextAdmin)

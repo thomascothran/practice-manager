@@ -49,6 +49,26 @@ class IndexViewTests(TestCase):
         expected_url = '/accounts/login/?next=%s' % reverse('task_manager:index')
         self.assertRedirects(response, expected_url=expected_url)
 
+    def test_filter_that_a_users_context_shows_up_in_filter(self):
+        """
+        This test ensures that a user's contexts shows up in the filter
+        on the side of the page
+        """
+        test_superuser = User.objects.create_superuser(
+            username='test_superuser_40291',
+            email='test_superuser_40291',
+            password='sdjfOIJ@42'
+        )
+        test_context = Context.objects.create(
+            name='psdjew@#11',
+            user=test_superuser
+        )
+
+        c = Client()
+        c.force_login(test_superuser)
+        response = c.get(reverse('task_manager:index'), follow=True)
+        self.assertContains(response=response, text=str(test_context))
+
 
 class TaskDetailView(TestCase):
     """
@@ -284,6 +304,27 @@ class TaskCreateViewTest(TestCase):
         expected_url = ('/accounts/login/?next=%s' % reverse('task_manager:add_task'))
         self.assertRedirects(response, expected_url=expected_url)
 
+    def test_that_a_users_context_shows_up_in_task_creation_view(self):
+        """
+        This tests that the task creation page shows all contexts related
+        to the user
+        """
+        test_superuser = User.objects.create_superuser(
+            username='test_sup',
+            password='kalsdjfq231',
+            email='test_sup@gmail.com'
+        )
+        test_context = Context.objects.create(
+            name='Hejw)wJ!',
+            user=test_superuser
+        )
+
+        c = Client()
+        c.force_login(test_superuser)
+        response = c.get(reverse('task_manager:add_task'))
+        self.assertContains(response=response, text='Hejw)wJ!')
+
+    # TO DO def test_that_other_users_contexts_dont_show_up_in_task_creation_view(self):
 
 class TaskUpdateViewTest(TestCase):
     """

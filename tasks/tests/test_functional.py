@@ -7,6 +7,8 @@ from django.test import TestCase, RequestFactory
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 
+from ..models import Context
+
 # Constants
 test_superuser_username = 'test_superuser_998'          # Setting up username and password strings
 test_superuser_email = 'test_superuser_998@gmail.com'   # here so that they can be referenced below
@@ -14,9 +16,10 @@ test_superuser_password = 'slafj3430WIER93@#'
 test_user_username = 'test_user_998'
 test_user_password = 'ska;fljewerwfjsl#@2'
 test_user_email = 'testuser98@gmail.com'
+test_context_name = 'JFKekeoo'
 
 
-class SeleniumTest(StaticLiveServerTestCase):
+class SeleniumTest(TestCase, StaticLiveServerTestCase):
     """
     This class tests the task functionalities of the task manager
     """
@@ -26,29 +29,20 @@ class SeleniumTest(StaticLiveServerTestCase):
         self.browser = webdriver.Firefox()
         self.browser.implicitly_wait(4)
 
+        # Create a context object that can be used later
+        User.objects.create_superuser(
+            username=test_superuser_username,
+            email=test_superuser_email,
+            password=test_superuser_password,
+        )
+        Context.objects.create(
+            name=test_context_name,
+            user=User.objects.get(username=test_superuser_username)
+        )
+
+
     def tearDown(self):
         self.browser.quit()
-
-    # Helper Functions
-    def create_user(self, superuser=True):
-        """
-        This is a helper function to create and return a user. Don't change
-        usernames or passwords--it will break the functionality of the tests
-        """
-        if superuser == True:
-            test_superuser = User.objects.create_superuser(
-                username=test_superuser_username,
-                email=test_superuser_email,
-                password=test_superuser_password,
-            )
-            return test_superuser
-        else:
-            test_user = User.objects.create_user(
-                username=test_user_username,
-                email=test_user_email,
-                password=test_user_password
-            )
-            return test_user
 
     def log_user_in(self, user_object, password):
         """
@@ -69,7 +63,7 @@ class SeleniumTest(StaticLiveServerTestCase):
 
     def test_create_task_and_check_that_it_shows_up_in_the_task_manager_index_and_filter(self):
         # Create user
-        self.user = self.create_user(superuser=True)
+        self.user = User.objects.get(username=test_superuser_username)
         # Log the user in
         self.log_user_in(user_object=self.user, password=test_superuser_password)
         self.browser.implicitly_wait(10)
@@ -95,7 +89,7 @@ class SeleniumTest(StaticLiveServerTestCase):
         supervisor_dropdown = Select(self.browser.find_element_by_name('supervisor'))
         supervisor_dropdown.select_by_visible_text(str(self.user))
         context_input = Select(self.browser.find_element_by_name('context'))
-        context_input.select_by_visible_text('@work')
+        context_input.select_by_visible_text(str(test_context_name))
         name_input.submit()
         self.browser.implicitly_wait(4)
         # Go to the index page, make sure test task shows up
@@ -110,12 +104,20 @@ class SeleniumTest(StaticLiveServerTestCase):
             any('Test Name BfC02@@' in row.text for row in task_table_rows),
             msg='The task is not showing up in the task index table'
         )
-        # TO DO: Check that the task shows up in the filter
-
-
-        # How to select options: https://stackoverflow.com/questions/24498976/python-selenium-select-from-drop-down-menu
-
-
+        # TEST FILTER
+        # Fill out and submit task filter
+        context_filter_input = Select(self.browser.find_element_by_name('context_filter'))
+        context_filter_input.select_by_visible_text(test_context_name)
+        type_task_or_project_filter = Select(self.browser.find_element_by_name('item_filter'))
+        type_task_or_project_filter.select_by_visible_text('task')
+        self.browser.find_element_by_name('task_filter_submit')
+        # Now see if the task shows up on the page
+        task_table = self.browser.find_element_by_name('task_table')
+        task_table_rows = task_table.find_elements_by_tag_name('tr')
+        self.assertTrue(
+            any('Test name BfC02@@' in row.text for row in task_table_rows),
+            msg='The filter is not rendering a page showing the task'
+        )
 
 
 if __name__ == '__main__':
