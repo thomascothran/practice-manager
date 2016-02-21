@@ -49,7 +49,7 @@ def IndexView(request):
         logging.debug('No post data. Returning all tasks and projects.')
 
         # Dynamically Generate Task Filter
-        task_filter = TaskFilter(user=request.user)
+        task_filter = TaskFilter(request_user=request.user)
 
         # Set context to be sent to the template
         context = {'task_list': task_list, 'project_list': project_list, 'task_filter': task_filter}
@@ -57,9 +57,9 @@ def IndexView(request):
 
     else:
         # TO DO: Filter for context, status
-        post_data = TaskFilter(request.POST)
+        post_data = TaskFilter(request.POST, request_user=request.user)
         # Dynamically generate task_filter
-        task_filter = TaskFilter(user=request.user)
+        task_filter = TaskFilter(request_user=request.user)
         logging.debug('Created dict for post data. Dict is %s' % post_data)
 
         # Test whether form data is valid, if so filter

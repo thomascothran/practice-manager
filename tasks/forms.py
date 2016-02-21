@@ -27,13 +27,13 @@ class TaskFilter(forms.Form):
     """
     This class is used to filter tasks by context and priority
     """
-    def __init__(self, user, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         This allows the view to pass in values to the taskfilter
-        :param user: This is the request.user
         """
+        request_user = kwargs.pop('request_user')
         super(TaskFilter, self).__init__(*args, **kwargs)
-        self.fields['context_filter'].queryset = Context.objects.filter(user=user)
+        self.fields['context_filter'].queryset = Context.objects.filter(user=request_user)
 
     context_filter = forms.ModelChoiceField(
         label='Context',
