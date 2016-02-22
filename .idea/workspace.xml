@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6e63b9ab-d15e-4cdf-8298-db80752b3a4d" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tasks/tests/test_forms.py" afterPath="$PROJECT_DIR$/tasks/tests/test_forms.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tasks/utils.py" afterPath="$PROJECT_DIR$/tasks/utils.py" />
     </list>
     <ignored path="cothranlawoffices.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -61,8 +60,8 @@
       <file leaf-file-name="test_forms.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tasks/tests/test_forms.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.61747575">
-              <caret line="65" column="74" selection-start-line="65" selection-start-column="74" selection-end-line="65" selection-end-column="74" />
+            <state vertical-scroll-proportion="0.14563107">
+              <caret line="52" column="63" selection-start-line="52" selection-start-column="63" selection-end-line="52" selection-end-column="63" />
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
@@ -1100,8 +1099,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tasks/tests/test_forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.61747575">
-          <caret line="65" column="74" selection-start-line="65" selection-start-column="74" selection-end-line="65" selection-end-column="74" />
+        <state vertical-scroll-proportion="0.14563107">
+          <caret line="52" column="63" selection-start-line="52" selection-start-column="63" selection-end-line="52" selection-end-column="63" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
           </folding>

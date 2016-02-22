@@ -50,7 +50,7 @@ class TaskFilterTestCase(TestCase):
                  task_filter.errors)
         )
 
-    def test_that_task_filter_actually_filters_tasks_by_context(self):
+    def test_that_task_filter_returns_context_after_validations(self):
         #  # Pull context from database so we can get its id
         test_context = Context.objects.get(name=test_context_name)
         # Pull supervisor from db so we can instantiate the form
