@@ -1,6 +1,13 @@
 from django.db.models import Q
 from .models import Task
 
+import logging
+
+# LOGGING SETTINGS
+
+logging.basicConfig(level=logging.DEBUG, format=' %(asctime)s - %(levelname)s - %(message)s')
+logging.debug('Start of tasks/utils.py')
+
 def apply_filters_from_task_filter(requesting_user, post_dict):
     """
     This function applies the filters from the task filter,
@@ -49,9 +56,11 @@ def apply_filters_from_task_filter(requesting_user, post_dict):
             filtered_tasks = filtered_tasks.filter(status='complete')
 
         # Now we apply the context filter
-        if post_dict['context_filter'] != '' or post_dict['context_filter'] == None:
-            context = post_dict['context_filter']
-            filtered_tasks = filtered_tasks.filter(context=context)
+        if post_dict['context_filter'] != '' or post_dict['context_filter'] != None:
+            logging.debug('Context filter selected')
+            context_filter = post_dict['context_filter']
+            logging.debug('Context filter set to %s' % context_filter)
+            filtered_tasks = filtered_tasks.filter(context=context_filter)
         else:
             # No context filter selected, so don't apply a filter
             pass

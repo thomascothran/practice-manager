@@ -30,7 +30,7 @@ class TaskFilterTestCase(TestCase):
             name=test_context_name,
             user=test_supervisor
         )
-    def test_that_task_filter_takes_answers_and_returns_data(self):
+    def test_that_task_filter_takes_validates_data(self):
         # Pull context from database so we can get its id
         test_context = Context.objects.get(name=test_context_name)
         # Pull supervisor from db so we can instantiate the form
@@ -50,7 +50,28 @@ class TaskFilterTestCase(TestCase):
                  task_filter.errors)
         )
 
-    # TO DO: def test_that_task_filter_actually_filters_tasks_by_context(self):
+    def test_that_task_filter_actually_filters_tasks_by_context(self):
+        #  # Pull context from database so we can get its id
+        test_context = Context.objects.get(name=test_context_name)
+        # Pull supervisor from db so we can instantiate the form
+        test_supervisor = User.objects.get(username=test_supervisor_username)
+        # Build dictionary that represents entering data in TaskFilter
+        form_data = {
+            'status_filter': 'pending',
+            'item_filter': 'both',
+            'role_filter': 'any',
+            'context_filter': str(test_context.id)
+        }
+        task_filter = TaskFilter(data=form_data, request_user=test_supervisor)
+        # Run the is.valid() method so that we can access the cleaned_data
+        task_filter.is_valid()
+        cleaned_data = task_filter.cleaned_data
+        self.assertEqual(
+            cleaned_data['context_filter'],
+            test_context,
+            msg=(('The context filter entry in task_filter is not equal to the test context.' +
+                  'context_filter is %s' % task_filter['context_filter']))
+        )
 
 
 if __name__ == '__main__':
