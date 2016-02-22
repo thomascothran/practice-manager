@@ -4,13 +4,12 @@
 
 <div class="col-sm-6 col-md-7 col-lg-7">
 
-    <h2>{{ task.name }}</h2>
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+    <h2>
+        {{ task.name }}
+        <a class="btn btn-default btn-md" href="{% url 'task_manager:task_update' task.id %}">Edit</a>
+    </h2>
+    <p></p>
 
-    <form action="{% url 'task_manager:task_detail' task.id %}" method="post">
-    {% csrf_token %}
-    {{ form|crispy }}
-</form>
 
 </div>
 {% endblock %}

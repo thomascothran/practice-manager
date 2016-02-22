@@ -142,7 +142,7 @@ class TaskUpdate(PermissionRequiredMixin, UpdateView):
     permission_required = 'tasks.can_add_task'
     template_name = 'tasks/update-task.html'
     model = Task
-    fields = ['status', 'name', 'related_projects',
+    fields = ['status', 'name', 'related_projects', 'context',
               'due_date', 'notes', 'assigned_to', 'supervisor', 'related_cases', 'related_persons']
 
 

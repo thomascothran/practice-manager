@@ -7,7 +7,7 @@ from django.test import TestCase, RequestFactory
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 
-from ..models import Context
+from ..models import Context, Task
 
 # Constants
 test_superuser_username = 'test_superuser_998'          # Setting up username and password strings
@@ -17,7 +17,7 @@ test_user_username = 'test_user_998'
 test_user_password = 'ska;fljewerwfjsl#@2'
 test_user_email = 'testuser98@gmail.com'
 test_context_name = 'JFKekeoo'
-
+test_task_name = 'test_task_312FEW'
 
 class SeleniumTest(TestCase, StaticLiveServerTestCase):
     """
@@ -30,16 +30,23 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
         self.browser.implicitly_wait(4)
 
         # Create a context object that can be used later
-        User.objects.create_superuser(
+        test_superuser = User.objects.create_superuser(
             username=test_superuser_username,
             email=test_superuser_email,
             password=test_superuser_password,
         )
-        Context.objects.create(
+        test_context = Context.objects.create(
             name=test_context_name,
             user=User.objects.get(username=test_superuser_username)
         )
+        test_task = Task.objects.create(
+            name=test_task_name,
+            created_by=test_superuser,
+            supervisor=test_superuser
+        )
 
+        # Relate these to each other
+        test_task.context.add(test_context)
 
     def tearDown(self):
         self.browser.quit()
@@ -104,18 +111,32 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
             any('Test Name BfC02@@' in row.text for row in task_table_rows),
             msg='The task is not showing up in the task index table'
         )
-        # TEST FILTER
+
+    def test_that_task_filter_works(self):
+        # Get user and log in
+        self.user = User.objects.get(username=test_superuser_username)
+        # Log the user in
+        self.log_user_in(user_object=self.user, password=test_superuser_password)
+        self.browser.implicitly_wait(10)
+        # Go to task index
+        task_index_url = str(self.live_server_url) + reverse('task_manager:index')
+        self.browser.get(task_index_url)
+        self.assertTrue(str(task_index_url) == self.browser.current_url,
+                        msg=('Assertion that current_url is %s failed. Current_url is %s' %
+                             (str(reverse('task_manager:index')), self.browser.current_url)))
         # Fill out and submit task filter
         context_filter_input = Select(self.browser.find_element_by_name('context_filter'))
         context_filter_input.select_by_visible_text(test_context_name)
         type_task_or_project_filter = Select(self.browser.find_element_by_name('item_filter'))
         type_task_or_project_filter.select_by_visible_text('task')
-        self.browser.find_element_by_name('task_filter_submit')
-        # Now see if the task shows up on the page
+        self.browser.find_element_by_name('task_filter_submit').click()
+        # Quick check to make sure we're on the right page
+        self.assertEqual(self.browser.current_url, str(self.live_server_url + reverse('task_manager:index')))
+        # Now see if we see our task showing up
         task_table = self.browser.find_element_by_name('task_table')
         task_table_rows = task_table.find_elements_by_tag_name('tr')
         self.assertTrue(
-            any('Test name BfC02@@' in row.text for row in task_table_rows),
+            any(str(test_task_name) in row.text for row in task_table_rows),
             msg='The filter is not rendering a page showing the task'
         )
 

@@ -70,7 +70,7 @@ class IndexViewTests(TestCase):
         response = c.get(reverse('task_manager:index'), follow=True)
         self.assertContains(response=response, text=str(test_context))
 
-    def test_that_using_task_filter_returns_context_object(self):
+    def test_that_using_task_filter_returns_tasks_by_context(self):
         """
         This test will send a TaskFilter dict as POST data, and
         will see if the TaskFilter returns a context object.
@@ -86,6 +86,13 @@ class IndexViewTests(TestCase):
             name='test_context_SDF3pwe21@',
             user=test_supervisor
         )
+        test_task = Task.objects.create(
+            name='test_task_345sdf230',
+            created_by=test_supervisor,
+            supervisor=test_supervisor,
+        )
+        # Add test_context to test_task
+        test_task.context.add(test_context)
 
         # Create client, log user in
         client = Client()
@@ -100,8 +107,7 @@ class IndexViewTests(TestCase):
         }
 
         response = client.post(reverse('task_manager:index'), data=form_data)
-        self.assertContains(response=response, text=test_context.id)
-        self.assertContains(response=response, text=test_context.name)
+        self.assertContains(response=response, text=test_task.name)
 
 class TaskDetailView(TestCase):
     """

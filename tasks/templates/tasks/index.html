@@ -29,9 +29,13 @@
                 {% for task in task_list %}
                     <tr>
                         <td><a href="{% url 'task_manager:task_detail' task.id %}">{{ task.name }}</a></td>
-                        <td>{{ task.assigned_to.all }}</td>
+                        <td>
+                            {% for assigned_user in task.assigned_to.all %}
+                            {{ assigned_user }}<br>
+                            {% endfor %}
+                        </td>
                         <td>{{ task.supervisor }}</td>
-                        <td>{{ task.context }}</td>
+                        <td>{% for context in task.context.all %}{{ context }}<br> {% endfor %}</td>
                         <td>{{ task.priority }}</td>
                         <td>{{ task.due_date }}</td>
                         <td>{{ task.created_date }}</td>
