@@ -16,7 +16,7 @@ urlpatterns = [
     # Adding tasks
     url(r'^add-task/$', views.TaskCreate.as_view(), name='add_task'),
     # Update/view tasks
-    url(r'^view-task/(?P<pk>[0-9a-zA-Z_-]+)/$', views.TaskUpdate.as_view(), name='task_update'),
+    url(r'^update-task/(?P<pk>[0-9a-zA-Z_-]+)/$', views.TaskUpdate.as_view(), name='task_update'),
 
     # PROJECTS
     # E.g., /project/234jf0we-324skl-34j
