@@ -10,6 +10,7 @@ from ..models import Task, Project, Context
 # LOGGING SETTINGS
 
 
+
 class IndexViewTests(TestCase):
     """
     This class tests the index view
@@ -49,7 +50,7 @@ class IndexViewTests(TestCase):
         expected_url = '/accounts/login/?next=%s' % reverse('task_manager:index')
         self.assertRedirects(response, expected_url=expected_url)
 
-    def test_filter_that_a_users_context_shows_up_in_filter(self):
+    def test__that_a_users_contexts_shows_up_in_filter(self):
         """
         This test ensures that a user's contexts shows up in the filter
         on the side of the page
@@ -69,6 +70,38 @@ class IndexViewTests(TestCase):
         response = c.get(reverse('task_manager:index'), follow=True)
         self.assertContains(response=response, text=str(test_context))
 
+    def test_that_using_task_filter_returns_context_object(self):
+        """
+        This test will send a TaskFilter dict as POST data, and
+        will see if the TaskFilter returns a context object.
+        """
+        # Create a user and a context
+        test_supervisor = User.objects.create_superuser(
+            username='test_supervisor_ukKk03',
+            password='testafaq3djOK',
+            email='test_supervisor_ukKk03'
+
+        )
+        test_context = Context.objects.create(
+            name='test_context_SDF3pwe21@',
+            user=test_supervisor
+        )
+
+        # Create client, log user in
+        client = Client()
+        client.force_login(test_supervisor)
+
+        # Build Dict to be submitted to the form
+        form_data = {
+            'status_filter': 'pending',
+            'item_filter': 'both',
+            'role_filter': 'any',
+            'context_filter': str(test_context.id)
+        }
+
+        response = client.post(reverse('task_manager:index'), data=form_data)
+        self.assertContains(response=response, text=test_context.id)
+        self.assertContains(response=response, text=test_context.name)
 
 class TaskDetailView(TestCase):
     """

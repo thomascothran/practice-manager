@@ -66,12 +66,17 @@ class TaskFilterTestCase(TestCase):
         # Run the is.valid() method so that we can access the cleaned_data
         task_filter.is_valid()
         cleaned_data = task_filter.cleaned_data
+        self.assertTrue(
+            type(cleaned_data['context_filter']) is Context,
+            msg='The task_filter["context_filter"] type is actually %s' % type(cleaned_data['context_filter'])
+        )
         self.assertEqual(
             cleaned_data['context_filter'],
             test_context,
             msg=(('The context filter entry in task_filter is not equal to the test context.' +
                   'context_filter is %s' % task_filter['context_filter']))
         )
+
 
 
 if __name__ == '__main__':

@@ -60,7 +60,7 @@ def apply_filters_from_task_filter(requesting_user, post_dict):
             logging.debug('Context filter selected')
             context_filter = post_dict['context_filter']
             logging.debug('Context filter set to %s' % context_filter)
-            filtered_tasks = filtered_tasks.filter(context=context_filter)
+            filtered_tasks = filtered_tasks.filter(contexts=context_filter)
         else:
             # No context filter selected, so don't apply a filter
             pass
