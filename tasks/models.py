@@ -7,6 +7,7 @@ from case_manager.models import Case
 from people_and_property.models import Person
 
 import uuid
+from markupfield.fields import MarkupField
 
 # CONSTANTS
 
@@ -40,7 +41,7 @@ class Context(models.Model):
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=30)
-    description = models.TextField(max_length=200, blank=True)
+    description = MarkupField(markup_type='markdown', blank=True, escape_html=True)
     user = models.ForeignKey(User, related_name='task_contexts')
 
     def __str__(self):
@@ -58,14 +59,26 @@ class Project(models.Model):
 
     name = models.CharField(max_length=200)
 
-    purpose = models.TextField(blank=True)
+    purpose = MarkupField(
+        blank=True,
+        markup_type='markdown',
+        escape_html=True,
+    )
     """What is my purpose with this task?"""
 
-    vision = models.TextField(blank=True)
+    vision = MarkupField(
+        blank=True,
+        markup_type='markdown',
+        escape_html=True,
+    )
     """Vision refers to what the task will look like when successfully
     completed"""
 
-    big_steps = models.TextField(blank=True)
+    big_steps = MarkupField(
+        blank=True,
+        markup_type='markdown',
+        escape_html=True,
+    )
     """What are the big steps (not task-level steps) that need to be
     completed? Maybe split this out into a new class, similar to tasks"""
 
@@ -137,7 +150,11 @@ class Task(models.Model):
     updated_date = models.DateTimeField(auto_now=True, null=True)
     due_date = models.DateTimeField(blank=True, null=True)
     related_projects = models.ManyToManyField(Project, blank=True)
-    notes = models.TextField(blank=True)
+    notes = MarkupField(
+        blank=True,
+        markup_type='markdown',
+        escape_html=False
+    )
 
     # Relations to other apps
     related_cases = models.ManyToManyField(Case, related_name='tasks_rel_to_case', blank=True)

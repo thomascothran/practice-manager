@@ -70,6 +70,7 @@ INSTALLED_APPS = (
     'file_manager',
     'bootstrap3',
     'crispy_forms',
+    'markupfield'
 
 )
 

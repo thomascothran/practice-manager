@@ -8,7 +8,77 @@
         {{ task.name }}
         <a class="btn btn-default btn-md" href="{% url 'task_manager:task_update' task.id %}">Edit</a>
     </h2>
-    <p></p>
+    <table class="table table-bordered" name="individual_task_table">
+        <tr>
+            <td><h4>Status</h4></td>
+            <td>{{ task.status }}</td>
+        </tr>
+        <tr>
+            <td><h4>Contexts</h4></td>
+            <td>
+                {% for context in task.context.all %}       {# Eventually, this needs to be changed so that the #}
+                {% if context.user == request.user %}       {# view passes in the context. #}
+                {{ context }}
+                {% endif %}
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Created by:</h4></td>
+            <td><a href="{{ task.created_by.get_absolute_url }}">{{ task.created_by }}</a></td>
+        </tr>
+        <tr>
+            <td><h4>Supervisor</h4></td>
+            <td><a href="{{ task.supervisor.get_absolute_url }}">{{ task.supervisor }}</a></td>
+        </tr>
+        <tr>
+            <td><h4>Assigned to: </h4></td>
+            <td>
+                {% for assigned_user in task.assigned_to.all %}
+                <a href="{{ assigned_user.get_absolute_url }}">{{ assigned_user }}</a>
+                {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Users who can view:</h4></td>
+            <td>
+                {% if task.viewers.all %}
+                {% for viewers in task.viewers.all %}
+                <a href="{{ viewers.get_absolute_url }}">{{ viewers }}</a><br>
+                {% endfor %}
+                {% else %}
+                <p>No viewers assigned</p>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Task Created:</h4></td>
+            <td>{{ task.created_date }}</td>
+        </tr>
+        <tr>
+            <td><h4>Task Last Updated:</h4></td>
+            <td>{{ task.updated_date }}</td>
+        </tr>
+        <tr>
+            <td><h4>Task Due:</h4></td>
+            <td>{{ task.due_date }}</td>
+        </tr>
+        <tr>
+            <td><h4>Related Projects:</h4></td>
+            <td>
+                {% if task.related_projects.all %}
+                {% for related_project in task.related_projects.all %}
+                <a href="{{ related_project.get_absolute_url }}">{{ related_project }}</a><br>
+                {% endfor %}
+                {% else %}
+                <p>No related projects</p>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    <h2>Notes</h2>
+    {{ task.notes }}
 
 
 </div>
