@@ -140,6 +140,41 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
             msg='The filter is not rendering a page showing the task'
         )
 
+    def test_that_user_can_create_project(self):
+        # Constants
+        local_test_project_name = 'Test_Project_29k23'
+
+        # Get user and log in
+        self.user = User.objects.get(username=test_superuser_username)
+        # Log user in
+        self.log_user_in(user_object=self.user, password=test_superuser_password)
+        self.browser.implicitly_wait(4)
+        # Go to task index
+        task_index_url = str(self.live_server_url) + reverse('task_manager:index')
+        self.browser.get(task_index_url)
+        # Quick check to make sure we're on index page
+        self.assertEqual(task_index_url, self.browser.current_url)
+        # Now, go to add project page
+        self.browser.find_element_by_name('create_project_sidebar_link').click()
+        self.assertEqual(
+            str(self.live_server_url + reverse('task_manager:add_project')),
+            self.browser.current_url
+        )
+        # Fill out the add project form
+        self.browser.find_element_by_name('name').send_keys(local_test_project_name)
+        Select(self.browser.find_element_by_name('context')).select_by_visible_text(test_context_name)
+        Select(self.browser.find_element_by_name('assigned_to')).select_by_visible_text(str(self.user))
+        Select(self.browser.find_element_by_name('supervisor')).select_by_visible_text(str(self.user))
+        self.browser.find_element_by_name('submit_created_project').click()
+        # Now go to the index page to see if it appears
+        self.browser.get(self.live_server_url + reverse('task_manager:index'))
+        project_table = self.browser.find_element_by_name('project_table')
+        project_table_rows = project_table.find_elements_by_tag_name('tr')
+        self.assertTrue(
+            any(str(local_test_project_name) in row.text for row in project_table_rows),
+            msg="The Project Name is not rendering on the index after the task was created."
+        )
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

@@ -123,7 +123,8 @@ class Project(models.Model):
     def __str__(self):
         return self.name
 
-    # TO DO: Set an absolute url
+    def get_absolute_url(self):
+        return reverse('task_manager:project_detail', kwargs={'pk': self.pk})
 
 
 
