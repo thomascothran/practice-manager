@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e63b9ab-d15e-4cdf-8298-db80752b3a4d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tasks/models.py" afterPath="$PROJECT_DIR$/tasks/models.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tasks/templates/tasks/project_detail.html" afterPath="$PROJECT_DIR$/tasks/templates/tasks/project_detail.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tasks/tests/test_functional.py" afterPath="$PROJECT_DIR$/tasks/tests/test_functional.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/tasks/tests/test_views.py" afterPath="$PROJECT_DIR$/tasks/tests/test_views.py" />
     </list>
     <ignored path="cothranlawoffices.iws" />
@@ -27,10 +24,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tasks/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.41896552">
+            <state vertical-scroll-proportion="0.0">
               <caret line="97" column="31" selection-start-line="97" selection-start-column="31" selection-end-line="97" selection-end-column="31" />
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
@@ -42,18 +39,18 @@
       <file leaf-file-name="project_detail.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/tasks/templates/tasks/project_detail.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.375">
-              <caret line="65" column="39" selection-start-line="65" selection-start-column="39" selection-end-line="65" selection-end-column="39" />
+            <state vertical-scroll-proportion="-4.3076925">
+              <caret line="61" column="96" selection-start-line="61" selection-start-column="96" selection-end-line="61" selection-end-column="96" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test_views.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="test_views.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/tasks/tests/test_views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="778" column="14" selection-start-line="778" selection-start-column="14" selection-end-line="778" selection-end-column="14" />
+            <state vertical-scroll-proportion="0.8">
+              <caret line="775" column="33" selection-start-line="775" selection-start-column="33" selection-end-line="775" selection-end-column="33" />
               <folding>
                 <element signature="e#0#30#0" expanded="true" />
                 <element signature="e#299#3634#0" expanded="false" />
@@ -64,11 +61,11 @@
                 <element signature="e#21196#22326#0" expanded="false" />
                 <element signature="e#22410#24376#0" expanded="false" />
                 <element signature="e#24441#25994#0" expanded="false" />
-                <element signature="e#27909#30189#0" expanded="false" />
-                <element signature="e#30235#37602#0" expanded="false" />
-                <element signature="e#37643#38903#0" expanded="false" />
-                <element signature="e#38944#40238#0" expanded="false" />
-                <element signature="e#40279#45151#0" expanded="false" />
+                <element signature="e#27950#30230#0" expanded="false" />
+                <element signature="e#30276#37643#0" expanded="false" />
+                <element signature="e#37684#38944#0" expanded="false" />
+                <element signature="e#38985#40279#0" expanded="false" />
+                <element signature="e#40320#45192#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -1007,6 +1004,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/tasks/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="97" column="31" selection-start-line="97" selection-start-column="31" selection-end-line="97" selection-end-column="31" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tasks/templates/tasks/project_detail.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-4.3076925">
+          <caret line="61" column="96" selection-start-line="61" selection-start-column="96" selection-end-line="61" selection-end-column="96" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/tasks/urls.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
@@ -1017,8 +1032,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/tasks/tests/test_views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="778" column="14" selection-start-line="778" selection-start-column="14" selection-end-line="778" selection-end-column="14" />
+        <state vertical-scroll-proportion="0.8">
+          <caret line="775" column="33" selection-start-line="775" selection-start-column="33" selection-end-line="775" selection-end-column="33" />
           <folding>
             <element signature="e#0#30#0" expanded="true" />
             <element signature="e#299#3634#0" expanded="false" />
@@ -1029,29 +1044,11 @@
             <element signature="e#21196#22326#0" expanded="false" />
             <element signature="e#22410#24376#0" expanded="false" />
             <element signature="e#24441#25994#0" expanded="false" />
-            <element signature="e#27909#30189#0" expanded="false" />
-            <element signature="e#30235#37602#0" expanded="false" />
-            <element signature="e#37643#38903#0" expanded="false" />
-            <element signature="e#38944#40238#0" expanded="false" />
-            <element signature="e#40279#45151#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tasks/templates/tasks/project_detail.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.375">
-          <caret line="65" column="39" selection-start-line="65" selection-start-column="39" selection-end-line="65" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tasks/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.41896552">
-          <caret line="97" column="31" selection-start-line="97" selection-start-column="31" selection-end-line="97" selection-end-column="31" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
+            <element signature="e#27950#30230#0" expanded="false" />
+            <element signature="e#30276#37643#0" expanded="false" />
+            <element signature="e#37684#38944#0" expanded="false" />
+            <element signature="e#38985#40279#0" expanded="false" />
+            <element signature="e#40320#45192#0" expanded="false" />
           </folding>
         </state>
       </provider>

@@ -10,6 +10,18 @@
             <td>{{ project.status }}</td>
         </tr>
         <tr>
+            <td><h4>Context</h4></td>
+            <td>
+                {% if project.context.all %}
+                {% for context in project.context.all %}
+                <a href="{{ context.get_absolute_url }}">{{ context }}</a>
+                {% endfor %}
+                {% else %}
+                No context assigned to this project.
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
             <td><h4>Project Level</h4></td>
             <td>{{ project.level }}</td>
         </tr>
@@ -47,7 +59,7 @@
         </tr>
         <tr>
             <td><h4>Supervisor</h4></td>
-            <td>{{ project.supervisor }}</td>
+            <td><a href="{{ project.supervisor.get_absolute_url }}">{{ project.supervisor }}</a></td>
         </tr>
         <tr>
             <td><h4>Users who can view</h4></td>
