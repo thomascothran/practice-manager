@@ -6,7 +6,12 @@
 
     <h2>
         {{ task.name }}
-        <a class="btn btn-default btn-md" href="{% url 'task_manager:task_update' task.id %}">Edit</a>
+        <a
+                class="btn btn-default btn-md"
+                name="edit_task_button"
+                href="{% url 'task_manager:task_update' task.id %}">
+            Edit
+        </a>
     </h2>
     <table class="table table-bordered" name="individual_task_table">
         <tr>

@@ -7,7 +7,7 @@ from django.test import TestCase, RequestFactory
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
 
-from ..models import Context, Task
+from ..models import Context, Task, Project
 
 # Constants
 test_superuser_username = 'test_superuser_998'          # Setting up username and password strings
@@ -18,6 +18,7 @@ test_user_password = 'ska;fljewerwfjsl#@2'
 test_user_email = 'testuser98@gmail.com'
 test_context_name = 'JFKekeoo'
 test_task_name = 'test_task_312FEW'
+test_project_name = 'test_project_kljejar2'
 
 class SeleniumTest(TestCase, StaticLiveServerTestCase):
     """
@@ -41,6 +42,11 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
         )
         test_task = Task.objects.create(
             name=test_task_name,
+            created_by=test_superuser,
+            supervisor=test_superuser
+        )
+        test_project = Project.objects.create(
+            name=test_project_name,
             created_by=test_superuser,
             supervisor=test_superuser
         )
@@ -79,13 +85,12 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
         # Make sure we go to the task manager index
         task_index_url = str(self.live_server_url) + reverse('task_manager:index')
         self.browser.get(task_index_url)
+        self.browser.implicitly_wait(4)
         self.assertTrue(str(task_index_url) == self.browser.current_url,
                         msg=('Assertion that current_url is %s failed. Current_url is %s' %
                              (str(reverse('task_manager:index')), self.browser.current_url)))
         # Click the 'add task' button on the sidebar
-        add_task_taskbar_button = self.browser.find_element_by_name('add_task_sidebar_link')
-        add_task_taskbar_button.click()
-        self.browser.implicitly_wait(4)
+        self.browser.find_element_by_name('add_task_sidebar_link').click()
         # Assert that it takes us to the add task page
         self.assertTrue(str(reverse('task_manager:add_task')) in self.browser.current_url)
         # Fill out form
@@ -141,6 +146,12 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
         )
 
     def test_that_user_can_create_project(self):
+        """
+        This test starts with an already created task and project.
+        The user creates the relationship between the task and project,
+        then checks the details page of each to ensure that both show
+        up on the other's page
+        """
         # Constants
         local_test_project_name = 'Test_Project_29k23'
 
@@ -174,6 +185,51 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
             any(str(local_test_project_name) in row.text for row in project_table_rows),
             msg="The Project Name is not rendering on the index after the task was created."
         )
+
+    def test_that_tasks_related_to_projects_show_up(self):
+        # Set variables to objects created in setUp
+        local_test_task = Task.objects.get(name=test_task_name)
+        local_test_project = Project.objects.get(name=test_project_name)
+        self.user = User.objects.get(username=test_superuser_username)
+        # Log the user in
+        self.log_user_in(user_object=self.user, password=test_superuser_password)
+        # Navigate to task details page
+        self.browser.get(str(self.live_server_url + local_test_task.get_absolute_url()))
+        # Click on the 'edit' button
+        self.browser.find_element_by_name('edit_task_button').click()
+        # Check to ensure we're on the task update page
+        self.assertEqual(
+                self.browser.current_url,
+                str(self.live_server_url + reverse('task_manager:task_update', kwargs={'pk': local_test_task.pk}))
+        )
+        # Add the related project
+        Select(self.browser.find_element_by_name('related_projects')).select_by_visible_text(test_project_name)
+        # Click on the submit button
+        self.browser.find_element_by_name('submit_task_edits').click()
+        # Check to ensure it redirected to details page
+        self.assertEqual(
+            self.browser.current_url,
+            str(self.live_server_url + reverse('task_manager:task_detail', kwargs={'pk': local_test_task.pk}))
+        )
+        # Assert that the project name shows up
+        task_table = self.browser.find_element_by_name('individual_task_table')
+        rows = task_table.find_elements_by_tag_name('tr')
+        self.assertTrue(
+            any(test_project_name in row.text for row in rows)
+        )
+        # TO DO: Navigate to project page, ensure it shows up there
+        self.browser.get(
+            reverse('task_manager:project_detail', kwargs={'pk': local_test_project.pk})
+        )
+        # Quick check to make sure we're on the project detail page
+        self.assertEqual(
+            self.browser.current_url,
+            str(self.live_server_url + reverse('task_manager:project_detail', kwargs={'pk': local_test_project.pk})),
+            msg=('self.browser.page_source is %s' %
+                 (self.browser.page_source))
+        )
+        self.assertContains(response=self.browser.page_source, text=local_test_task.name)
+
 
 
 if __name__ == '__main__':

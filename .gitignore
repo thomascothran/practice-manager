@@ -4,3 +4,4 @@ static
 *.sqlite3
 practice.sqlite3
 secrets.json
+.idea/workspace.xml

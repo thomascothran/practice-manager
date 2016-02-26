@@ -136,7 +136,12 @@ class Task(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=200)
     created_by = models.ForeignKey(User, related_name='task_created_by', limit_choices_to={'is_staff': True})
-    assigned_to = models.ManyToManyField(User, related_name='task_assigned_to', limit_choices_to={'is_staff': True})
+    assigned_to = models.ManyToManyField(
+        User,
+        related_name='task_assigned_to',
+        limit_choices_to={'is_staff': True},
+        blank=True
+    )
     """assigned_to refers to the person currently working on task"""
     supervisor = models.ForeignKey(User, related_name='task_supervisor', limit_choices_to={'is_staff': True})
     """ Supervisor refers to the person responsible for ensuring the
@@ -162,7 +167,7 @@ class Task(models.Model):
     related_persons = models.ManyToManyField(Person, related_name='tasks_rel_to_person', blank=True)
 
     # Relations to other items in this app
-    context = models.ManyToManyField(Context, related_name='tasks_under_context')
+    context = models.ManyToManyField(Context, related_name='tasks_under_context', blank=True)
 
     def __str__(self):
         return self.name
