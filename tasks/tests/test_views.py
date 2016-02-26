@@ -776,11 +776,11 @@ class ProjectDetailViewTest(TestCase):
             test_project.purpose,
             test_project.vision,
             test_project.big_steps,
-            # test_project.due_date,
-            test_project.context.all[0],
+            'Jan. 1, 2040',
             test_project.level,
             test_project.viewers.all()[0]
         ]
+
 
         for project_attribute in test_project_attributes:
             self.assertContains(
