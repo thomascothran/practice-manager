@@ -95,7 +95,7 @@ class Project(models.Model):
     """Status will be either 'pending' or 'complete'"""
     created_date = models.DateTimeField(auto_now_add=True, null=True)
     updated_date = models.DateTimeField(auto_now=True, null=True)
-    due_date = models.DateTimeField(blank=True, null=True)
+    due_date = models.DateField(blank=True, null=True)
     under_projects = models.ManyToManyField("self",
                                             blank=True,
                                             symmetrical=False,

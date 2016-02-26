@@ -225,8 +225,6 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
         self.assertEqual(
             self.browser.current_url,
             str(self.live_server_url + reverse('task_manager:project_detail', kwargs={'pk': local_test_project.pk})),
-            msg=('self.browser.page_source is %s' %
-                 (self.browser.page_source))
         )
         self.assertContains(response=self.browser.page_source, text=local_test_task.name)
 

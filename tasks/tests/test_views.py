@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 import logging
+from datetime import date
 
 from ..models import Task, Project, Context
 
@@ -108,6 +109,7 @@ class IndexViewTests(TestCase):
 
         response = client.post(reverse('task_manager:index'), data=form_data)
         self.assertContains(response=response, text=test_task.name)
+
 
 class TaskDetailView(TestCase):
     """
@@ -364,6 +366,7 @@ class TaskCreateViewTest(TestCase):
         self.assertContains(response=response, text='Hejw)wJ!')
 
     # TO DO def test_that_other_users_contexts_dont_show_up_in_task_creation_view(self):
+
 
 class TaskUpdateViewTest(TestCase):
     """
@@ -728,6 +731,62 @@ class ProjectDetailViewTest(TestCase):
         expected_url = ('/accounts/login/?next=%s' %
                         reverse('task_manager:project_detail', kwargs={'pk': test_project.id}))
         self.assertRedirects(response, expected_url=expected_url)
+
+    def test_that_basic_project_info_shows_up_in_view(self):
+        """
+        This tests whether the basic project info shows up in
+        the project detail view
+        """
+        # Create super user
+        superuser_user = User.objects.create_superuser(
+            username='test_superuser492kd',
+            password='asdkjf234fj',
+            email='sldkfjeowo0@gmail.com'
+        )
+        # Create project
+        test_project = Project.objects.create(
+            name='SDKfjwraa09 asd0fai093iasdfj a',
+            created_by=superuser_user,
+            supervisor=superuser_user,
+            status='pending',
+            purpose='##Hellow',
+            vision='*italics*',
+            big_steps='some big steps here',
+            due_date=date(2040, 1, 1),
+            level='2'
+        )
+
+        # Add test_superuser as user
+        test_project.viewers.add(superuser_user)
+
+        client = Client()
+        client.force_login(superuser_user)
+
+        response = client.get(
+            reverse('task_manager:project_detail',
+                        kwargs={'pk': test_project.id})
+        )
+
+        # Make a list of attributes that should show up on detail page
+        test_project_attributes = [
+            test_project.name,
+            test_project.created_by,
+            test_project.supervisor,
+            test_project.status,
+            test_project.purpose,
+            test_project.vision,
+            test_project.big_steps,
+            # test_project.due_date,
+            test_project.level,
+            test_project.viewers.all()[0]
+        ]
+
+        for project_attribute in test_project_attributes:
+            self.assertContains(
+                response=response,
+                text=str(project_attribute),
+                msg_prefix='Project attributed %s not in project page response' % project_attribute
+            )
 
 
 class ProjectCreateViewTest(TestCase):

@@ -1,10 +1,121 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Project Details</title>
-</head>
-<body>
+{% extends "case_manager/employee-portal-base.html" %}
+{% load crispy_forms_tags %}
+{% block top_row %}
 
-</body>
-</html>
+<div class="col-sm-6 col-md-7 col-lg-7">
+    <h2 href="{% url 'task_manager:update-project' project.id %}">{{ project.name }}</h2>
+    <table class="table table-bordered" name="individual_project_table">
+        <tr>
+            <td><h4>Status</h4></td>
+            <td>{{ project.status }}</td>
+        </tr>
+        <tr>
+            <td><h4>Project Level</h4></td>
+            <td>{{ project.level }}</td>
+        </tr>
+        <tr>
+            <td><h4>Due Date</h4></td>
+            <td>{{ project.due_date }}</td>
+        </tr>
+        <tr>
+            <td><h4>Purpose</h4></td>
+            <td>{{ project.purpose }}</td>
+        </tr>
+        <tr>
+            <td><h4>Big Steps</h4></td>
+            <td>{{ project.big_steps }}</td>
+        </tr>
+        <tr>
+            <td><h4>Vision</h4></td>
+            <td>{{ project.vision }}</td>
+        </tr>
+        <tr>
+            <td><h4>Created By</h4></td>
+            <td>{{ project.created_by }} created project on {{ project.created_date }}</td>
+        </tr>
+        <tr>
+            <td><h4>Assigned To</h4></td>
+            <td>
+                {% if project.assigned_to.all %}
+                {% for assigned_user in project.assigned_to.all %}
+                    <a href="{{ assigned_user.get_absolute_url }}">{{ assigned_user }}</a>
+                    <br>
+                {% endfor %}
+                {% else %}
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Supervisor</h4></td>
+            <td>{{ project.supervisor }}</td>
+        </tr>
+        <tr>
+            <td><h4>Users who can view</h4></td>
+            <td>
+                {% if project.viewers.all %}
+                {% for viewing_user in project.viewers.all %}
+                <a href="{{ viewing_user.get_absolute_url }}">{{ viewing_user }}</a><br>
+                {% endfor %}
+                {% else %}
+                No users set as viewers of the task.
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Project Last Updated</h4></td>
+            <td>{{ project.updated_date }}</td>
+        </tr>
+        <tr>
+            <td><h4>Under Projects</h4></td>
+            <td>
+                {% if project.under_projects.all %}
+                {% for sup_project in project.under_projects.all %}
+                <a href="{{ sup_project.get_absolute_url }}">{{ sup_projects }}</a><br>
+                {% endfor %}
+                {% else %}
+                This project is not under any other projects
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Other Projects Under This Project</h4></td>
+            <td>
+                {% if project.subordinate_projects.all %}
+                {% for sub_project in project.subordinate_projects.all %}
+                <a href="{{ sub_project.get_absolute_url }}">{{ sub_project }}</a><br>
+                {% endfor %}
+                {% else %}
+                No subordinate project listed
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Related Cases</h4></td>
+            <td>
+                {% if project.related_cases.all %}
+                {% for rel_case in project.related_cases.all %}
+                <a href="{{ rel_case.get_absolute_url }}">{{ rel_case }}</a>
+                <br>
+                {% endfor %}
+                {% else %}
+                No related cases
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Other Related Persons</h4></td>
+            <td>
+                {% if project.related_persons.all %}
+                {% for related_person in project.related_persons.all %}
+                <a href="{{ related_person.get_absolute_url }}">{{ related_person }}</a>
+                {% endfor %}
+                {% else %}
+                No other related persons
+                {% endif %}
+            </td>
+        </tr>
+
+    </table>
+</div>
+
+{% endblock %}
