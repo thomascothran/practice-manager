@@ -176,7 +176,7 @@ class TaskTestCase(TestCase):
         # Test the reverse relationship. Is the task related to the project
         # through the project.task_set attribute
         self.assertEqual(test_task,
-                         test_project.task_set.get(name=test_task.name))
+                         test_project.related_tasks.get(name=test_task.name))
 
 
 class ContextTestCase(TestCase):

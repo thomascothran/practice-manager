@@ -102,6 +102,18 @@
             </td>
         </tr>
         <tr>
+            <td><h4>Related Tasks</h4></td>
+            <td>
+                {% if project.related_tasks.all %}
+                {% for related_task in project.related_tasks.all %}
+                <a href="{{ related_task.get_absolute_url }}">{{ related_task }}</a>
+                {% endfor %}
+                {% else %}
+                No related tasks
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
             <td><h4>Related Cases</h4></td>
             <td>
                 {% if project.related_cases.all %}

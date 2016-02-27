@@ -764,7 +764,7 @@ class ProjectDetailViewTest(TestCase):
 
         response = client.get(
             reverse('task_manager:project_detail',
-                        kwargs={'pk': test_project.id})
+                    kwargs={'pk': test_project.id})
         )
 
         # Make a list of attributes that should show up on detail page

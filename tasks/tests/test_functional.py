@@ -218,15 +218,25 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
             any(test_project_name in row.text for row in rows)
         )
         # TO DO: Navigate to project page, ensure it shows up there
-        self.browser.get(
-            reverse('task_manager:project_detail', kwargs={'pk': local_test_project.pk})
+        self.browser.get(self.live_server_url + local_test_project.get_absolute_url())
+        self.assertEqual(
+            local_test_project.get_absolute_url(),
+            reverse('task_manager:project_detail', kwargs={'pk': local_test_project.id})
         )
         # Quick check to make sure we're on the project detail page
         self.assertEqual(
             self.browser.current_url,
             str(self.live_server_url + reverse('task_manager:project_detail', kwargs={'pk': local_test_project.pk})),
         )
-        self.assertContains(response=self.browser.page_source, text=local_test_task.name)
+        # Find the part of the page where the test task shows up.
+        project_table = self.browser.find_element_by_name('individual_project_table')
+        rows = project_table.find_elements_by_tag_name('tr')
+        self.assertTrue(
+            any(local_test_task.name in row.text for row in rows),
+            msg=('The task name, %s, doesn\'t show up anywhere in the project, %s' %
+                 (local_test_task.name, local_test_project))
+        )
+
 
 
 
