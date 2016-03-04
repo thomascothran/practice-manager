@@ -3,9 +3,10 @@ from selenium.webdriver.support.ui import Select
 import unittest
 
 from django.core.urlresolvers import reverse
-from django.test import TestCase, RequestFactory
+from django.test import TestCase, RequestFactory, Client
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.contrib.auth.models import User
+from django.contrib.auth import authenticate
 
 from ..models import Context, Task, Project
 
@@ -64,22 +65,83 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
         :param password: this is a string representing the password
         :return:
         """
+        # First, check to see whether username and password authenticate directly
+        # using authenticate()
+        user_auth = authenticate(username=user_object.username, password=password)
+        self.assertTrue(
+            # If user couldn't be authenticated, user_auth returns None
+            user_auth is not None,
+            msg=('User authentication failed in test_functional.log_user_in() when' +
+                 'it was attempted to login user with authenticate()')
+        )
+        # Now check to make sure that the test would fail with bad credentials
+        user_not_auth = authenticate(username='absdflkjewrw2', password='werjksler3#@')
+        self.assertFalse(
+            user_not_auth is not None,
+            msg='For some reason, attempt to authenticate non-logged in user succeeded.'
+        )
         # Try to pull up task index, make sure you get redirected
         self.browser.get(str(self.live_server_url) + reverse('task_manager:index'))
         self.assertTrue('login' in self.browser.current_url)
+        self.browser.implicitly_wait(10)
         # Login
         self.browser.find_element_by_name('username').send_keys(user_object.username)
         self.browser.find_element_by_name('password').send_keys(password)
         self.browser.find_element_by_name('submit').click()
         self.browser.implicitly_wait(10)
+        return user_object
+
+    def test_whether_login_page_works(self):
+        local_test_user = User.objects.get(username=test_superuser_username)
+        # Ensure we've retreived the right user
+        self.assertEqual(local_test_user.email, test_superuser_email)
+        # Now, log user in
+        self.user = self.log_user_in(user_object=local_test_user, password=test_superuser_password)
+        self.browser.get(self.live_server_url + reverse('task_manager:index'))
+        self.assertEqual(
+            str(self.live_server_url + reverse('task_manager:index')),
+            self.browser.current_url
+        )
+
+
+    def test_whether_setup_is_writing_users_to_database(self):
+        """
+        This test just ensures that the setUp function above
+        writes to the database
+        """
+        test_superuser = User.objects.get(username=test_superuser_username)
+        self.assertEqual(
+            test_superuser.email,
+            test_superuser_email,
+        )
+
+    def test_whether_login_works_with_django_test_client(self):
+        """
+        This tests whether the login works, only not using selenium
+        """
+        c = Client()
+        login_dict = {
+            'username': test_superuser_username,
+            'password': test_superuser_password,
+            'next':     reverse('task_manager:index')
+        }
+        response = c.post(path=reverse('login'), data=login_dict)
+        self.assertIn('_auth_user_id', c.session)       # Checks session data to ensure
+                                                        # user authenticated
 
 
     def test_create_task_and_check_that_it_shows_up_in_the_task_manager_index_and_filter(self):
         # Create user
-        self.user = User.objects.get(username=test_superuser_username)
+        local_test_user = User.objects.get(username=test_superuser_username)
+        # Check that we have the right user from the database
+        self.assertEqual(local_test_user, User.objects.get(username=test_superuser_username))
         # Log the user in
-        self.log_user_in(user_object=self.user, password=test_superuser_password)
+        returned_user = self.log_user_in(user_object=local_test_user, password=test_superuser_password)
         self.browser.implicitly_wait(10)
+        self.browser.maximize_window()
+        self.user = local_test_user
+        self.assertEqual(self.user, local_test_user)    # See which users have what attributes
+        self.assertEqual(self.user, returned_user)
         # Pull up the main task manager page
         self.browser.get(str(self.live_server_url) + reverse('task_manager:index'))
         # Make sure we go to the task manager index
@@ -164,7 +226,10 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
         task_index_url = str(self.live_server_url) + reverse('task_manager:index')
         self.browser.get(task_index_url)
         # Quick check to make sure we're on index page
-        self.assertEqual(task_index_url, self.browser.current_url)
+        self.assertEqual(
+            task_index_url,
+            self.browser.current_url,
+        )
         # Now, go to add project page
         self.browser.find_element_by_name('create_project_sidebar_link').click()
         self.assertEqual(
@@ -236,7 +301,6 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
             msg=('The task name, %s, doesn\'t show up anywhere in the project, %s' %
                  (local_test_task.name, local_test_project))
         )
-
 
 
 

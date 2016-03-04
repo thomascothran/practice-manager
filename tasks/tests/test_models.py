@@ -7,6 +7,23 @@ from django.core.urlresolvers import reverse
 from ..models import Project, Task, Context
 
 
+class DatabaseTestCase(TestCase):
+    """
+    This class ensures that we can create things in the
+    database and retreive them
+    """
+    def setUp(self):
+        # Create a user
+        User.objects.create_superuser(
+            username='test_superuser_2340j',
+            email='test_superuser_2340j@hotmail.com',
+            password='test_sup_43JLK#@',
+        )
+
+    def testThatUserCanBeRetrieved(self):
+        test_superuser = User.objects.get(username='test_superuser_2340j')
+        self.assertEqual('test_superuser_2340j@hotmail.com', test_superuser.email)
+
 class ProjectTestCase(TestCase):
     """
     This tests the Project model using unit testing.

@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^case-manager/', include('case_manager.urls',  namespace='case_manager')),
     url(r'^people-and-property/', include('people_and_property.urls', namespace='people_and_property')),
     url(r'^file-manager/', include('file_manager.urls', namespace='file_manager')),
-    url('^', include('django.contrib.auth.urls')), # This may result in errors -> does it catch everything?
+    url('^', include('django.contrib.auth.urls')),
 ]

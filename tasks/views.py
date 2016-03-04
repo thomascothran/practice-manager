@@ -2,10 +2,9 @@ from django.views import generic
 from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic import DetailView
 from django.shortcuts import render
-from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.decorators import permission_required, login_required
 from django.contrib.auth.mixins import PermissionRequiredMixin, UserPassesTestMixin
 from django.db.models import Q
-from django import forms
 
 from .models import Task, Project, Context
 from .forms import TaskFilter
@@ -22,14 +21,14 @@ logging.debug('Start of tasks/views.py')
 # Create your views here.
 
 
-@permission_required('tasks.can_add_task')
+@login_required()
 def IndexView(request):
     """
     This class is the homepage that shows all projects and tasks
     together on one page.
     """
-    logging.debug('Entered IndexView in tasks/views.py')
-    logging.debug('request.method is %s' % str(request.method))
+    logging.info('Entered IndexView in tasks/views.py')
+    logging.info('request.method is %s' % str(request.method))
 
     # Set user's default task_list
     task_list = Task.objects.filter(

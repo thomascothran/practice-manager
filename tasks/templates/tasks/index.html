@@ -18,7 +18,6 @@
                     <th>Assigned to</th>
                     <th>Supervisor</th>
                     <th>Context</th>
-                    <th>Priority</th>
                     <th>Due Date</th>
                     <th>Created Date</th>
                     <th>Created By</th>
@@ -36,7 +35,6 @@
                         </td>
                         <td>{{ task.supervisor }}</td>
                         <td>{% for context in task.context.all %}{{ context }}<br> {% endfor %}</td>
-                        <td>{{ task.priority }}</td>
                         <td>{{ task.due_date }}</td>
                         <td>{{ task.created_date }}</td>
                         <td>{{ task.created_by }}</td>
@@ -66,7 +64,6 @@
                     <th>Assigned to</th>
                     <th>Supervisor</th>
                     <th>Context</th>
-                    <th>Priority</th>
                     <th>Due Date</th>
                     <th>Created Date</th>
                     <th>Created by</th>
@@ -80,7 +77,6 @@
                         <td>{{ each_project.assigned_to }}</td>
                         <td>{{ each_project.supervisor }}</td>
                         <td>{{ each_project.context }}</td>
-                        <td>{{ each_project.priority }}</td>
                         <td>{{ each_project.due_date }}</td>
                         <td>{{ each_project.created_date }}</td>
                         <td>{{ each_project.created_by }}</td>
