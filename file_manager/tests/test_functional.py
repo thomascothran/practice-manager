@@ -96,6 +96,7 @@ class SeleniumTests(TestCase, LiveServerTestCase):
                 msg='User %s could not reach note index page' % authorized_user['user']
             )
 
+    # TO DO def test_whether_user_can_create_note_and_see_it_in_note_index(self):
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

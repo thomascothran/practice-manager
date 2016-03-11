@@ -33,4 +33,21 @@ class NoteIndexViewTests(TestCase):
         response = client.get(reverse('file_manager:note_index'), follow=True)
         self.assertTemplateUsed(response=response, template_name='file_manager/note_index.html')
 
+    def test_that_authorized_users_can_see_note_index(self):
+        # Make list of authorized users
+        local_test_superuser = User.objects.get(username=test_superuser_username)
+        authorized_users = [local_test_superuser]
+
+        client = Client()
+        for authorized_user in authorized_users:
+            client.force_login(user=authorized_user)
+            response = client.get(reverse('file_manager:note_index'))
+            self.assertTrue(response.status_code is 200)
+
+    def test_that_anonymous_users_cannot_see_note_index(self):
+        client = Client()
+        response = client.get(reverse('file_manager:note_index'), follow=True)
+        url_redirect = '/accounts/login/?next=%s' % reverse('file_manager:note_index')
+        self.assertRedirects(response=response, expected_url=url_redirect)
+
     # TO DO: def test_whether_unauthorized_users_are_redirected(self):
