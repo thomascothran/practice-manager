@@ -9,7 +9,7 @@ if DEBUG:
     INSTALLED_APPS += (
         'debug_toolbar',
     )
-
+'''
     LOGGING = {
         'version': 1,
         'disable_existing_loggers': False,
@@ -28,6 +28,7 @@ if DEBUG:
             },
         },
     }
+'''
 
 with open(os.path.join(BASE_DIR, 'secrets.json')) as f:
     secrets = json.loads(f.read())
