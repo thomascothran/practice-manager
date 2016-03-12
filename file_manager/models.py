@@ -3,6 +3,8 @@ import uuid
 from case_manager.models import Case
 from people_and_property.models import Person
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from markupfield.fields import MarkupField
 
 # Create your models here.
 
@@ -35,7 +37,7 @@ class Note(models.Model):
     created = models.DateTimeField(auto_now_add=True, null=True)
     updated = models.DateTimeField(auto_now=True, null=True)
     title = models.CharField(max_length=60)
-    note = models.TextField(null=True, blank=True)
+    note = MarkupField(null=True, blank=True)
     tags = models.ManyToManyField(FileManagerTags, related_name='tagged_note_set')
     cases = models.ManyToManyField(Case, related_name='related_note_set')
     people = models.ManyToManyField(Person, related_name='notes_rel_to_person')
@@ -43,7 +45,8 @@ class Note(models.Model):
     def __str__(self):
         return str(self.title)
 
-    # TO DO: Define a get_absolute_url
+    def get_absolute_url(self):
+        return reverse('file_manager:note_create', kwargs={'pk': self.pk})
 
 
 

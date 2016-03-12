@@ -96,7 +96,27 @@ class SeleniumTests(TestCase, LiveServerTestCase):
                 msg='User %s could not reach note index page' % authorized_user['user']
             )
 
-    # TO DO def test_whether_user_can_create_note_and_see_it_in_note_index(self):
+    def test_that_user_can_create_note_and_see_it_in_note_index(self):
+        local_test_superuser = {
+            'user': User.objects.get(username=test_superuser_username),
+            'password': test_superuser_password
+        }
+        self.log_user_in(
+            user_object=local_test_superuser['user'],
+            password=local_test_superuser['password']
+        )
+        # Navigate to note index and click add note
+        self.browser.get(self.live_server_url + reverse('file_manager:note_index'))
+        self.assertEqual(
+            self.browser.current_url,
+            str(self.live_server_url + reverse('file_manager:note_index'))
+        )
+        self.browser.find_element_by_name('sidebar_add_note')
+        # Check to make sure we got to the add note page
+        self.assertEqual(
+            self.browser.current_url,
+            str(self.live_server_url, reverse('file_manager:note_create'))
+        )
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')

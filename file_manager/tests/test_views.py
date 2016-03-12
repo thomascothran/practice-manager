@@ -50,4 +50,47 @@ class NoteIndexViewTests(TestCase):
         url_redirect = '/accounts/login/?next=%s' % reverse('file_manager:note_index')
         self.assertRedirects(response=response, expected_url=url_redirect)
 
-    # TO DO: def test_whether_unauthorized_users_are_redirected(self):
+
+class NoteCreateView(TestCase):
+    """
+    This class tests the note create view
+    """
+    def setUp(self):
+        User.objects.create_superuser(
+            username=test_superuser_username,
+            email=test_superuser_email,
+            password=test_superuser_password
+        )
+
+    def tearDown(self):
+        pass
+
+    def test_whether_note_create_view_uses_correct_template(self):
+        client = Client()
+        test_superuser = User.objects.get(username=test_superuser_username)
+        client.force_login(test_superuser)
+        response = client.get(reverse('file_manager:note_create'), follow=True)
+        self.assertTemplateUsed(
+            response=response,
+            template_name='file_manager/note_create.html'
+        )
+
+    def tests_whether_anonymous_users_are_redirected(self):
+        client = Client()
+        response = client.get(reverse('file_manager:note_create'))
+        expected_url = '/accounts/login/?next=%s' % reverse('file_manager:note_create')
+        self.assertRedirects(
+            response=response,
+            expected_url=expected_url
+        )
+
+    def tests_whether_authorized_users_have_access_to_note_creation_view(self):
+        client = Client()
+        # Make a list of authorized users
+        local_test_superuser = User.objects.get(username=test_superuser_username)
+        authorized_users = [local_test_superuser]
+        # See if authorized users have access
+        for authorized_user in authorized_users:
+            client.force_login(authorized_user)
+            response = client.get(reverse('file_manager:note_create'))
+            self.assertEqual(200, response.status_code)
