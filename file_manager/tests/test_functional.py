@@ -6,12 +6,21 @@ from django.contrib.auth.models import User
 
 from selenium import webdriver
 
+from ..models import Note
+
 import unittest
 
 # Constants
 test_superuser_username = 'test_sup_aj3j*(Y'
 test_superuser_email = 'test_sup_234@gmail.com'
 test_superuser_password = 'sdlfkj3232()*HT^'
+
+test_superuser2_username = 'test_sup_JEIW()@'
+test_superuser2_email = 'test_supH@gmail.com'
+test_superuser2_password = 'aewlr3()*#J(#'
+
+test_sup2_note_title = 'This is a test note 2302jOI@U'
+test_sup2_note_title = 'Test HWL@@9#$H@'
 
 
 class SeleniumTests(TestCase, LiveServerTestCase):
@@ -26,6 +35,19 @@ class SeleniumTests(TestCase, LiveServerTestCase):
             email=test_superuser_email,
             password=test_superuser_password
         )
+
+        local_test_superuser2 = User.objects.create_superuser(
+            username=test_superuser2_username,
+            email=test_superuser2_email,
+            password=test_superuser2_password
+        )
+
+        Note.objects.create(
+            # This is superuser2's note
+            title=test_sup2_note_title,
+            creator=local_test_superuser2
+        )
+
 
     def tearDown(self):
         self.browser.quit()
@@ -118,6 +140,41 @@ class SeleniumTests(TestCase, LiveServerTestCase):
             str(self.live_server_url + reverse('file_manager:note_create'))
         )
         # Now, create a note
+        self.browser.find_element_by_name('title').send_keys('H#OJdj2)(*')
+        self.browser.find_element_by_name('submit_button').click()
+        # Check to ensure we're not stuck on the note creation page
+        self.assertNotEqual(
+            self.browser.current_url,
+            str(self.live_server_url + reverse('file_manager:note_create')),
+            msg='We\'re stuck on the note creation page. Perhaps note detail page is not working?'
+        )
+        # Now go to the note index page
+        self.browser.get('file_manager:note_index')
+        # Now, check to see if the note appears on the page
+        note_index_table = self.browser.find_element_by_name('note_index_table')
+        self.assertIn(member='H#OJdj2)(*', container=note_index_table)
+
+
+    def test_that_user_sees_own_notes_but_not_others(self):
+        # First, get objects
+        local_test_owner = User.objects.get(username=test_superuser2_username)
+        local_test_note = Note.objects.get(title=test_sup2_note_title)
+        local_test_nonowner = User.objects.get(username=test_superuser_username)
+
+        # Log nonowner in
+        self.log_user_in(
+            user_object=local_test_nonowner,
+            password=test_superuser_password
+        )
+
+        # Navigate to index
+        self.browser.get(self.live_server_url + reverse('file_manager:note_index'))
+        # Check to make sure we're there
+        self.assertEqual(
+            self.browser.current_url,
+            str(self.live_server_url + reverse('file_manager:note_index'))
+        )
+        # TO DO: Now, assert that nonowner does not see the other's note
 
 
 if __name__ == '__main__':

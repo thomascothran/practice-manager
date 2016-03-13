@@ -2,11 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6e63b9ab-d15e-4cdf-8298-db80752b3a4d" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file_manager/admin.py" afterPath="$PROJECT_DIR$/file_manager/admin.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/file_manager/migrations/0002_auto_20160312_1740.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/file_manager/migrations/0003_auto_20160312_1926.py" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/file_manager/migrations/0004_note_creator.py" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file_manager/models.py" afterPath="$PROJECT_DIR$/file_manager/models.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file_manager/templates/file_manager/note_create.html" afterPath="$PROJECT_DIR$/file_manager/templates/file_manager/note_create.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file_manager/urls.py" afterPath="$PROJECT_DIR$/file_manager/urls.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file_manager/views.py" afterPath="$PROJECT_DIR$/file_manager/views.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file_manager/templates/file_manager/note_index.html" afterPath="$PROJECT_DIR$/file_manager/templates/file_manager/note_index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/file_manager/tests/test_functional.py" afterPath="$PROJECT_DIR$/file_manager/tests/test_functional.py" />
     </list>
     <ignored path="cothranlawoffices.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,10 +29,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="views.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="views.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/file_manager/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.8448276">
+            <state vertical-scroll-proportion="0.0">
               <caret line="42" column="30" selection-start-line="42" selection-start-column="30" selection-end-line="42" selection-end-column="30" />
               <folding>
                 <element signature="e#0#48#0" expanded="true" />
@@ -39,44 +41,24 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="note_create.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/file_manager/templates/file_manager/note_create.html">
+      <file leaf-file-name="test_functional.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/file_manager/tests/test_functional.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-6.875">
-              <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="urls.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/file_manager/urls.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="add-task.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/tasks/templates/tasks/add-task.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-7.5">
-              <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="69" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="models.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/file_manager/models.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.40689656">
+              <caret line="148" column="97" selection-start-line="148" selection-start-column="97" selection-end-line="148" selection-end-column="97" />
               <folding>
-                <element signature="e#0#28#0" expanded="true" />
+                <element signature="e#0#40#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test_views.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/file_manager/tests/test_views.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0">
+              <caret line="95" column="55" selection-start-line="95" selection-start-column="55" selection-end-line="95" selection-end-column="55" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -146,13 +128,13 @@
         <option value="$PROJECT_DIR$/cothranlawoffices/settings/local.py" />
         <option value="$PROJECT_DIR$/file_manager/tests/test_views.py" />
         <option value="$PROJECT_DIR$/case_manager/templates/case_manager/employee-portal-base.html" />
-        <option value="$PROJECT_DIR$/file_manager/tests/test_functional.py" />
-        <option value="$PROJECT_DIR$/file_manager/templates/file_manager/note_index.html" />
-        <option value="$PROJECT_DIR$/file_manager/templates/file_manager/note_create.html" />
         <option value="$PROJECT_DIR$/file_manager/urls.py" />
-        <option value="$PROJECT_DIR$/file_manager/models.py" />
         <option value="$PROJECT_DIR$/file_manager/admin.py" />
         <option value="$PROJECT_DIR$/file_manager/views.py" />
+        <option value="$PROJECT_DIR$/file_manager/templates/file_manager/note_create.html" />
+        <option value="$PROJECT_DIR$/file_manager/templates/file_manager/note_index.html" />
+        <option value="$PROJECT_DIR$/file_manager/models.py" />
+        <option value="$PROJECT_DIR$/file_manager/tests/test_functional.py" />
       </list>
     </option>
   </component>
@@ -1094,24 +1076,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file_manager/tests/test_views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="1.2879311">
-          <caret line="95" column="55" selection-start-line="95" selection-start-column="55" selection-end-line="95" selection-end-column="55" />
-          <folding>
-            <element signature="e#0#30#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file_manager/tests/test_functional.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8189655">
-          <caret line="120" column="8" selection-start-line="120" selection-start-column="8" selection-end-line="120" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/case_manager/templates/case_manager/employee-portal-base.html">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.71132076">
@@ -1128,38 +1092,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file_manager/templates/file_manager/note_index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.107913665">
-          <caret line="4" column="21" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/tasks/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="143" column="15" selection-start-line="143" selection-start-column="15" selection-end-line="143" selection-end-column="15" />
           <folding>
             <element signature="e#0#32#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/tasks/templates/tasks/add-task.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-7.5">
-          <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="69" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/file_manager/models.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="43" column="0" selection-start-line="43" selection-start-column="0" selection-end-line="43" selection-end-column="0" />
-          <folding>
-            <element signature="e#0#28#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1174,9 +1112,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file_manager/urls.py">
+    <entry file="file://$PROJECT_DIR$/tasks/templates/tasks/add-task.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-7.5">
+          <caret line="12" column="8" selection-start-line="12" selection-start-column="8" selection-end-line="12" selection-end-column="69" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/file_manager/views.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+          <caret line="42" column="30" selection-start-line="42" selection-start-column="30" selection-end-line="42" selection-end-column="30" />
+          <folding>
+            <element signature="e#0#48#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/file_manager/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.12931034">
           <caret line="7" column="4" selection-start-line="7" selection-start-column="4" selection-end-line="7" selection-end-column="4" />
           <folding />
         </state>
@@ -1184,18 +1140,44 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/file_manager/templates/file_manager/note_create.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-6.875">
-          <caret line="11" column="15" selection-start-line="11" selection-start-column="15" selection-end-line="11" selection-end-column="15" />
+        <state vertical-scroll-proportion="0.2967626">
+          <caret line="11" column="22" selection-start-line="11" selection-start-column="22" selection-end-line="11" selection-end-column="22" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/file_manager/views.py">
+    <entry file="file://$PROJECT_DIR$/file_manager/templates/file_manager/note_index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.8448276">
-          <caret line="42" column="30" selection-start-line="42" selection-start-column="30" selection-end-line="42" selection-end-column="30" />
+        <state vertical-scroll-proportion="0.16187051">
+          <caret line="6" column="8" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/file_manager/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.4347826">
+          <caret line="16" column="63" selection-start-line="16" selection-start-column="63" selection-end-line="16" selection-end-column="63" />
           <folding>
-            <element signature="e#0#48#0" expanded="true" />
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/file_manager/tests/test_views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0">
+          <caret line="95" column="55" selection-start-line="95" selection-start-column="55" selection-end-line="95" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/file_manager/tests/test_functional.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40689656">
+          <caret line="148" column="97" selection-start-line="148" selection-start-column="97" selection-end-line="148" selection-end-column="97" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
           </folding>
         </state>
       </provider>

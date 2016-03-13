@@ -9,9 +9,28 @@ from django.conf import settings
 
 # Create your models here.
 
+class Notebook(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(auto_now_add=True, null=True)
+    updated = models.DateTimeField(auto_now=True, null=True)
+    name = models.CharField(max_length=60)
+    description = MarkupField(blank=True, markup_type='markdown')
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='owned_notebooks'
+    )
+    viewers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='viewable_notebooks')
+    editors = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='editable_notebooks'
+    )
 
+    def __str__(self):
+        return self.name
 
-# TO DO: Notebook model
+    # TO DO: Define an absolute url
 
 
 
@@ -24,16 +43,23 @@ class Note(models.Model):
     updated = models.DateTimeField(auto_now=True, null=True)
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
     title = models.CharField(max_length=60)
-    note = MarkupField(null=True, blank=True)
-    cases = models.ManyToManyField(Case, related_name='related_note_set')
+    note = MarkupField(null=True, blank=True, markup_type='markdown')
+    cases = models.ManyToManyField(Case, related_name='related_note_set', blank=True)
     editors = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
-        related_name='notes_user_can_edit'
+        related_name='notes_user_can_edit',
+        blank=True
     )
     viewers = models.ManyToManyField(
         settings.AUTH_USER_MODEL,
         related_name='notes_user_can_view',
-        help_text='Who do you want to be able to view the note?'
+        help_text='Who do you want to be able to view the note?',
+        blank=True
+    )
+    notebook = models.ForeignKey(
+        Notebook,
+        null=True,
+        blank=True
     )
 
     def __str__(self):
