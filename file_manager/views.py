@@ -1,5 +1,5 @@
 from django.views.generic.edit import CreateView
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render
@@ -35,5 +35,9 @@ class CreateNoteView(PermissionRequiredMixin, CreateView):
     model = Note
     permission_required = 'file_manager.can_add_note'
     template_name = 'file_manager/note_create.html'
-    fields = ['title', 'note', 'tags', 'cases', 'editors', 'viewers']
+    fields = ['title', 'note', 'cases', 'editors', 'viewers']
 
+class NoteDetailView(DetailView):
+    model = Note
+    template_name = 'file_manager/note_detail.html'
+    fields = ['title', 'note', 'cases', 'editors', 'viewers']

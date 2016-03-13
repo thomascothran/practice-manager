@@ -1,5 +1,5 @@
 {% extends "case_manager/employee-portal-base.html" %}
-{% load crispy_forms_tags %}
+{# load crispy_forms_tags #}
 
 {% block top_row %}
 
@@ -9,7 +9,7 @@
     <div name="form">
     <form action="{% url 'file_manager:note_create' %}" method="POST">
         {% csrf_token %}
-        {{ form|crispy }}
+        {{ form }}
         <BR><BR>
         <input type="submit" name="submit_button" value="Submit" />
     </form>
