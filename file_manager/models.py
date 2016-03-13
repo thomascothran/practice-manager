@@ -5,6 +5,7 @@ from people_and_property.models import Person
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from markupfield.fields import MarkupField
+from django.conf import settings
 
 # Create your models here.
 
@@ -40,7 +41,15 @@ class Note(models.Model):
     note = MarkupField(null=True, blank=True)
     tags = models.ManyToManyField(FileManagerTags, related_name='tagged_note_set')
     cases = models.ManyToManyField(Case, related_name='related_note_set')
-    people = models.ManyToManyField(Person, related_name='notes_rel_to_person')
+    editors = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='notes_user_can_edit'
+    )
+    viewers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='notes_user_can_view',
+        help_text='Who do you want to be able to view the note?'
+    )
 
     def __str__(self):
         return str(self.title)
