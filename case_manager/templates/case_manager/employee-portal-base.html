@@ -39,12 +39,20 @@
                 <br>
                 <a href="{% url 'task_manager:settings' %}">Settings</a>
               </p>
-
             </div>
+          <div class="list-group-item">
+            <h4 class="list-group-item-heading"><a href="{% url 'file_manager:note_index' %}">
+              Files and Notes
+            </a></h4>
+            <p class=""list-group-item-text">
+              <a href="{% url 'file_manager:note_create' %}" name="sidebar_add_note">Create Note</a>
+            </p>
           </div>
       </div>
     </div>
+    </div>
       {% block top_row %} {% endblock %} {# use top_row to put things on the same row with the sidebar #}
+    </div>
     </div>
 {% endblock %}
 {% endblock %}

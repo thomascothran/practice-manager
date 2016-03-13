@@ -3,6 +3,7 @@ from django.views.generic import ListView
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.decorators import permission_required, login_required
 from django.shortcuts import render
+from django.db.models import Q
 
 from .models import Note
 
@@ -17,6 +18,9 @@ def NoteIndexView(request):
     """
 
     # TO DO: Set default note list
+    note_list = Note.objects.filter(
+        Q(creator=request.user)
+    )
 
     if request.method == 'POST':
         return render(request, 'file_manager/note_index.html')

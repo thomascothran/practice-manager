@@ -37,6 +37,7 @@ class Note(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True, null=True)
     updated = models.DateTimeField(auto_now=True, null=True)
+    creator = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
     title = models.CharField(max_length=60)
     note = MarkupField(null=True, blank=True)
     tags = models.ManyToManyField(FileManagerTags, related_name='tagged_note_set')

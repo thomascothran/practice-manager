@@ -10,7 +10,6 @@
     <form action="{% url 'file_manager:note_create' %}" method="POST">
         {% csrf_token %}
         {{ form|crispy }}
-        <input type="hidden" name="created_by" value="{{ user.id }}">
         <BR><BR>
         <input type="submit" name="submit_button" value="Submit" />
     </form>

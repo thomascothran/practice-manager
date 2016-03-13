@@ -111,12 +111,14 @@ class SeleniumTests(TestCase, LiveServerTestCase):
             self.browser.current_url,
             str(self.live_server_url + reverse('file_manager:note_index'))
         )
-        self.browser.find_element_by_name('sidebar_add_note')
+        self.browser.find_element_by_name('sidebar_add_note').click()
         # Check to make sure we got to the add note page
         self.assertEqual(
             self.browser.current_url,
-            str(self.live_server_url, reverse('file_manager:note_create'))
+            str(self.live_server_url + reverse('file_manager:note_create'))
         )
+        # Now, create a note
+
 
 if __name__ == '__main__':
     unittest.main(warnings='ignore')
