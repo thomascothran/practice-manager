@@ -6,10 +6,14 @@ from django.core.urlresolvers import reverse
 import logging
 from datetime import date
 
+from ..models import Note
+
 # Constants
 test_superuser_username = 'test_su_flaks3'
 test_superuser_password = 'aslk312ej#D@'
 test_superuser_email = 'tec@gmail.com'
+
+test_note_title = 'test_note_324jsfO#IJ@4'
 
 class NoteIndexViewTests(TestCase):
 
@@ -94,3 +98,44 @@ class NoteCreateView(TestCase):
             client.force_login(authorized_user)
             response = client.get(reverse('file_manager:note_create'))
             self.assertEqual(200, response.status_code)
+
+
+class NoteDetailsViewTest(TestCase):
+    """
+    This class of tests tests the note details view
+    """
+
+    def setUp(self):
+        local_user = User.objects.create_superuser(
+            username=test_superuser_username,
+            email=test_superuser_email,
+            password=test_superuser_password
+        )
+
+        Note.objects.create(
+            title=test_note_title,
+            creator=local_user
+        )
+
+    def tearDown(self):
+        pass
+
+    def test_whether_task_details_uses_correct_template(self):
+        client = Client()
+        # Pull objects from db
+        local_test_superuser = User.objects.get(username=test_superuser_username)
+        local_test_note = Note.objects.get(title=test_note_title)
+        client.force_login(local_test_superuser)
+        response = client.get(reverse('file_manager:note_details', kwargs={'pk': local_test_note.id}))
+        self.assertTemplateUsed(response, template_name='templates/file_manager/note_detail.html')
+
+    def test_that_anon_users_are_redirected_from_note_detail_view(self):
+        client = Client()
+        # Pull note obj from db
+        local_test_note = Note.objects.get(title=test_note_title)
+        response = client.get(reverse('file_manager:note_details', kwargs={'pk': local_test_note.id }))
+        expected_url = '/accounts/login/?next=%s' % reverse('file_manager:note_details')
+        self.assertRedirects(
+            response=response,
+            expected_url=expected_url
+        )

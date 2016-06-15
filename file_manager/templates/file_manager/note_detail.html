@@ -1,0 +1,91 @@
+{% extends "case_manager/employee-portal-base.html" %}
+{% load crispy_forms_tags %}
+{% block top_row %}
+
+<div class="col-sm-6 col-md-7 col-lg-7">
+
+    <h2>
+        {{ note.title }}
+        <a
+                class="btn btn-default btn-md"
+                name="edit_note_button"
+                href="{% url 'file_manager:note_update' note.id %}">
+            Edit
+        </a>
+    </h2>
+    <table class="table table-bordered" name="individual_note_table">
+        <tr>
+            <td><h4>Created</h4></td>
+            <td>{{ note.created }}</td>
+        </tr>
+        <tr>
+            <td><h4>Updated</h4></td>
+            <td>{{ note.updated }}</td>
+        </tr>
+        <tr>
+            <td><h4>Created by:</h4></td>
+            <td><a href="{{ note.creator.get_absolute_url }}">{{ note.creator }}</a></td>
+        </tr>
+        <tr>
+            <td><h4>Notebook</h4></td>
+            <td>
+                {% if note.notebook %}
+                {{ note.notebook }}
+                {% else %}
+                This note is not in a notebook.
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Details</h4></td>
+            <td>{{ note.note }}</td>
+
+        </tr>
+        <tr>
+            <td><h4>Users who can edit note</h4></td>
+            <td>
+                {% if note.editors.all %}
+                    {% for editor in note.editors.all %}
+                        <a href="{{ editor.get_absolute_url }}">{{ editor }}</a><br>
+                    {% endfor %}
+                {% else %}
+                No editors for this note
+                {% endif %}
+                <a href="{{ task.supervisor.get_absolute_url }}">{{ task.supervisor }}</a>
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Users who can view note:</h4></td>
+            <td>
+                {% if note.viewers.all %}
+                    {% for viewer in note.viewers.all %}
+                    <a href="{{ viewer.get_absolute_url }}">{{ viewer }}</a>
+                    {% endfor %}
+                {% else %}
+                No users set as viewers for this note.
+                {% endif %}
+            </td>
+        </tr>
+
+            <td><h4>Related Cases:</h4></td>
+            <td>
+                {% if note.cases.all %}
+                {% for related_case in note.cases.all %}
+                <a href="{{ related_case.get_absolute_url }}">{{ related_case }}</a><br>
+                {% endfor %}
+                {% else %}
+                <p>No related case</p>
+                {% endif %}
+            </td>
+        </tr>
+        <tr>
+            <td><h4>Related Projects</h4></td>
+            <td>
+
+            </td>
+        </tr>
+    </table>
+
+
+</div>
+{% endblock %}

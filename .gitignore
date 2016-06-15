@@ -2,7 +2,9 @@ static
 .keys
 *.pyc
 *.sqlite3
+*.swp
 practice.sqlite3
 secrets.json
 workspace.xml
 logs
+idea/
