@@ -1,4 +1,5 @@
 static
+venv/
 .keys
 *.pyc
 *.sqlite3

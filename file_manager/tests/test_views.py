@@ -163,3 +163,33 @@ class NoteDetailsViewTest(TestCase):
             response=response,
             expected_url=expected_url
         )
+
+
+class NoteUpdateView(TestCase):
+    def setUp(self):
+        local_user = User.objects.create_superuser(
+            username=test_superuser_username,
+            email=test_superuser_email,
+            password=test_superuser_password
+        )
+
+        Note.objects.create(
+            title=test_note_title,
+            creator=local_user
+        )
+
+    def tearDown(self):
+        pass
+
+    def test_whether_note_update_view_uses_correct_template(self):
+        self.fail('Write test!')
+
+    def test_whether_unauthorized_users_get_redirected(self):
+        self.fail('Write test!')
+
+    def test_whether_page_renders_for_authorized_users(self):
+        self.fail('Write test!')
+
+    def test_whether_view_correctly_displays_info(self):
+        self.fail('Write test!')
+

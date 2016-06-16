@@ -28,7 +28,7 @@ class SeleniumTest(TestCase, StaticLiveServerTestCase):
 
     # Setup and teardown
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(4)
 
         # Create a context object that can be used later

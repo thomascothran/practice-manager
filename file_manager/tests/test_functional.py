@@ -26,7 +26,7 @@ test_sup2_note_title = 'Test HWL@@9#$H@'
 class SeleniumTests(TestCase, LiveServerTestCase):
 
     def setUp(self):
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
         self.browser.implicitly_wait(5)
 
         # Create objects for testing
