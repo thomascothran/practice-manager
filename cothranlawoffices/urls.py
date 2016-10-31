@@ -15,7 +15,6 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.contrib.auth import urls
 
 urlpatterns = [
     url(r'^task-manager/', include('tasks.urls', namespace="task_manager")),
@@ -25,4 +24,5 @@ urlpatterns = [
     url(r'^people-and-property/', include('people_and_property.urls', namespace='people_and_property')),
     url(r'^file-manager/', include('file_manager.urls', namespace='file_manager')),
     url('^', include('django.contrib.auth.urls')),
+    url('^', include('case_manager.urls', namespace="case_manager")),
 ]
