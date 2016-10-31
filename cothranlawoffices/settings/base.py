@@ -15,39 +15,16 @@ import os
 import logging
 import json
 
-from django.core.exceptions import ImproperlyConfigured
-
-# Start logging
-logging.debug('Entered cothranlawoffices.settings.py')
 
 # Set BASEDIR
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 ''' Note that tripling up on these dirnames bumps you up another parent folder '''
 
-
-# Load secrets.json (see 2 scoops for more)
-with open(os.path.join(BASE_DIR, "secrets.json")) as f:
-    secrets = json.loads(f.read())
-
-def get_secret(setting, secrets=secrets):
-    """
-    Get the secrete variable or return explicit exception. See
-    2 scoops of django p. 55 for more
-    """
-    try:
-        return secrets[setting]
-    except KeyError:
-        error_msg = "Set the {0} environment variable".format(setting)
-        raise ImproperlyConfigured(error_msg)
-
-
-
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_secret("SECRET_KEY")
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
